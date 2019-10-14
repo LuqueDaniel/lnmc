@@ -1,0 +1,12 @@
+# Python
+__pycache__
+.mypy_cache
+.pytest_cache
+*.pyc
+
+# Tests
+tests/src
+tests/dst
+
+# Editos
+.vscode
