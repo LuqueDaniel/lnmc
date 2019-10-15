@@ -12,9 +12,9 @@ setuptools.setup(
     long_description_content_type='text/markdown',
     classifiers=[
         'Development Status :: 5 - Production/Stable',
-        'License :: OSI Approved :: GNU Affero General Public License v3 or later (AGPLv3+)'
         'Intended Audience :: Developers',
         'Intended Audience :: System Administrators',
+        'License :: OSI Approved :: '
         'GNU Affero General Public License v3 or later (AGPLv3+)',
         'Operating System :: POSIX',
         'Operating System :: Microsoft :: Windows',
@@ -22,7 +22,7 @@ setuptools.setup(
         'Operating System :: MacOS',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
-        'Topic :: System :: Systems Administration'
+        'Topic :: System :: Systems Administration',
         "Topic :: Utilities",
         "Topic :: System :: Shells",
     ],
