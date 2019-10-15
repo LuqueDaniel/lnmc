@@ -1,3 +1,5 @@
+# © 2019 Daniel Luque
+# License AGPLv3 (http://www.gnu.org/licenses/agpl-3.0-standalone.html)
 """lnmc
 
 Allows to create symbolic link in batches from a YAML file and consolidate
@@ -10,7 +12,7 @@ import click as cli
 import yaml
 
 
-cli.core._verify_python3_env = lambda: None
+cli.core._verify_python3_env = lambda: None  # pylint: disable=W0212
 
 
 def yaml_read(yaml_file: str) -> dict:

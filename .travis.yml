@@ -1,18 +1,28 @@
 sudo: false
 cache: pip
-
 language: python
 
 python:
-  - "3.6"
-  - "3.7"
+- '3.6'
+- '3.7'
 
-# command to install dependencies
 install:
-  - pip install pipenv
-  - pipenv install . --dev
+- pip install pipenv
+- pipenv install . --dev
 
-# command to run tests
 script:
-  - pytest tests/lnmc_test.py -vvs
-  - pylint lnmc.py
+- pytest tests/lnmc_test.py -vvs
+- pylint lnmc.py
+
+deploy:
+  provider: pypi
+  username: LuqueDaniel
+  password:
+    secure: JhTkC+wAuY4aiWhHrlk+2+HxYrBhvnhYDK5zYeSw3uOIP9TtCS8h9FhGoeMRT/e8RNsdYVMH4FE7GWFaZbAWUimhxd08RiOuVqLVkIFC/ZGXOP1eGo/TzHVwUdpb/OVT6v7nMjet8/mASMIj1YOkKoVrLBQKgWrTCt0uMUYeeoHDM7XGrViD2dBRHxyu3/cIF2cbP7i0zk0KS8l6NhSQ8sU4KNx8pavhFySNy6uz4SGr2hJ63DixIbLsUJ/d6/fPDY2ySbkoG38gLVF3DeWxCxNcfhBiFL8V8CUF/Yf1NZ5C1SClwRd0PhKn1CKIfulZCBdtg+rFhhpdKQo+q86O3HH54xmyBmMyK5tL2baGP9QU5svVpta/cIYKWNjtEJE9mxItovS71J1QY1EcSTFHl8vfRNL5H+69c5mGG4MX9SnB6eCgUPkX+XWFzAbT/kxS9YHy0EQERFonAtWFMIoLrlguRdceP/kqpiXq4sJRIavJ6nbx0jqtRR62EIsr8Bz1aRQFF9Cjt6Mw/REmXcqrHUBB1H33gPsb6pSsZyS7Cfp2hMIBppaBiENlTbOtTYWkUhU66LzxfUT3ZCiqxAjkTp66S8CeaM8sYwitvcJrWhAcgJ0AeeLBNRa4mRS5Q0buTdoaRI4LVy+UmuJ7qPIqad2nBaBed46e0JMxmOW9D44=
+  edge: true
+  skip_existing: true
+  distributions: sdist bdist_wheel
+  on:
+    tags: true
+    branch: master
+    python: 3.6
