@@ -15,3 +15,4 @@ install:
 # command to run tests
 script:
   - pytest tests/lnmc_tests.py -vvs
+  - pylint lnmc.py
