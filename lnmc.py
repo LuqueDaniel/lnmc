@@ -1,9 +1,16 @@
-"""lnmc - Allows to create symbolic link in batches from a YAML file."""
+"""lnmc
+
+Allows to create symbolic link in batches from a YAML file and consolidate
+them in aspecific directory.
+"""
 
 import pathlib
 
 import click as cli
 import yaml
+
+
+cli.core._verify_python3_env = lambda: None
 
 
 def yaml_read(yaml_file: str) -> dict:
@@ -60,7 +67,8 @@ def symlink_create(src: pathlib.Path, dst: pathlib.Path, rewrite: bool,
 @cli.version_option(version="1.0.0", prog_name="lnmc")
 def lnmc(yaml_file: str, src: str, dst: str, rewrite: bool,
          verbose: bool) -> None:
-    """lnmc allows to create symbolic links in batches.
+    """Allows to create symbolic link in batches from a YAML file and
+    consolidate them in a specific directory.
 
     The files, directories and sub-directories that are going to be targeted to
     create the symbolic links are specified in a yaml file.
@@ -85,7 +93,3 @@ def lnmc(yaml_file: str, src: str, dst: str, rewrite: bool,
 
             symlink_create(src_path / item, pathlib.Path(dst).joinpath(item),
                            rewrite, verbose)
-
-
-if __name__ == "__main__":
-    lnmc()
