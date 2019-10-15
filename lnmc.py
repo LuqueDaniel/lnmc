@@ -31,11 +31,14 @@ def symlink_create(src: pathlib.Path, dst: pathlib.Path, rewrite: bool,
     """
     if dst.exists() and rewrite and dst.is_symlink():
         if verbose:
-            cli.secho(f"Symbolic link exists: {dst}", fg='cyan')
-            cli.secho(f"\tUnlinking: {dst}", fg='yellow')
+            cli.secho(f"Symbolic link exists: {dst} Unlinking", fg='cyan')
+        dst.unlink()
+    elif not dst.exists() and dst.is_symlink():
+        if verbose:
+            cli.secho(f"Symbolic link is broken: {dst} Unlinking", fg='yellow')
         dst.unlink()
     elif dst.exists() and not dst.is_symlink():
-        cli.secho(f"Can't create symlink. The file or directory: "
+        cli.secho("Can't create symlink. The file or directory: "
                   f"{dst} already exists.", bold=True, fg='red')
         return
     elif dst.exists() and not rewrite:
