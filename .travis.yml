@@ -5,11 +5,13 @@ python:
 - '3.6'
 - '3.7'
 install:
-- pip install pipenv
-- pipenv install . --dev
+- pip install pipenv coveralls
+- pipenv install --dev
 script:
-- pytest tests/lnmc_test.py -vvs
 - pylint lnmc.py
+- pytest --cov=lnmc -vvs
+after_success:
+- coveralls
 deploy:
   provider: pypi
   username: __token__

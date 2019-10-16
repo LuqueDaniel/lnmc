@@ -71,7 +71,8 @@ def test_symlink_create_file_exists(setup):
 def test_lnmc(setup):
     """Test the full command yaml file included."""
     runner = CliRunner()
-    runner.invoke(lnmc.lnmc, [YAML_TEST_FILE, str(SRC), str(DST), '--rewrite'])
+    runner.invoke(lnmc.lnmc, [YAML_TEST_FILE, str(SRC), str(DST), '--rewrite',
+                              '--verbose'])
 
     yaml_file = lnmc.yaml_read(YAML_TEST_FILE)
 

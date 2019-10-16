@@ -19,4 +19,4 @@ init:
 install:
   - pip install pipenv
   - pipenv install --dev
-  - pipenv run pytest -vvs tests\lnmc_test.py
+  - pipenv run pytest --cov=lnmc -vvs
