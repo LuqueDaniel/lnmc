@@ -1,5 +1,11 @@
 # lnmc
 
+[![PyPI](https://img.shields.io/pypi/v/lnmc)](https://pypi.org/project/lnmc/)
+![PyPI - Python Version](https://img.shields.io/pypi/pyversions/lnmc)
+![PyPI - License](https://img.shields.io/pypi/l/lnmc)
+[![Build Status](https://travis-ci.org/LuqueDaniel/lnmc.svg?branch=master)](https://travis-ci.org/LuqueDaniel/lnmc)
+[![Build status](https://ci.appveyor.com/api/projects/status/8hx2alijomplc7ub?svg=true)](https://ci.appveyor.com/project/LuqueDaniel/pybooru)
+
 Allows to create symbolic link in batches from a YAML file and consolidate them in a
 specific directory.
 
