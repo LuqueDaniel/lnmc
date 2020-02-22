@@ -66,7 +66,7 @@ def symlink_create(src: pathlib.Path, dst: pathlib.Path, rewrite: bool,
 @cli.option('--rewrite/--no-rewrite', default=False,
             help="Overwrite thesymbolic links if exist.")
 @cli.option('--verbose', is_flag=True, help="Enables verbose mode.")
-@cli.version_option(version="1.0.0", prog_name="lnmc")
+@cli.version_option(version="1.0.1", prog_name="lnmc")
 def lnmc(yaml_file: str, src: str, dst: str, rewrite: bool,
          verbose: bool) -> None:
     """Allows to create symbolic link in batches from a YAML file and

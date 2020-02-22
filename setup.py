@@ -5,7 +5,7 @@ import setuptools
 
 setuptools.setup(
     name='lnmc',
-    version='1.0.0',
+    version='1.0.1',
     description="Allows to create symbolic link in batches from a YAML file "
                 "and consolidate them in a specific directory.",
     long_description=open('README.md').read(),
@@ -20,8 +20,11 @@ setuptools.setup(
         'Operating System :: Microsoft :: Windows',
         'Operating System :: Unix',
         'Operating System :: MacOS',
+        'Programming Language :: Python',
+        'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
         'Topic :: System :: Systems Administration',
         "Topic :: Utilities",
         "Topic :: System :: Shells",
