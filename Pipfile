@@ -12,6 +12,3 @@ pytest-cov = "*"
 [packages]
 pyyaml = "*"
 click = "*"
-
-[requires]
-python_version = "3.6"

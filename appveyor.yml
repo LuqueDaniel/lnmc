@@ -8,15 +8,20 @@ environment:
     # List: https://www.appveyor.com/docs/installed-software/#python
     - PYTHON: "C:\\Python36"
       PYTHON_VERSION: "3.6"
-      PYTHON_ARCH: "32"
     - PYTHON: "C:\\Python37"
-      PYTHON VERSION: "3.7"
-      PYTHON ARCH: "32"
+      PYTHON_VERSION: "3.7"
+    - PYTHON: "C:\\Python38"
+      PYTHON_VERSION: "3.8"
 
 init:
-  - ECHO %PYTHON% %PYTHON_VERSION% %PYTHON_ARCH% %HOMEDRIVE%%HOMEPATH%
+  - ECHO %PYTHON% %PYTHON_VERSION% %HOMEDRIVE%%HOMEPATH%
 
 install:
-  - pip install pipenv
+  - ps: python -W ignore -m pip install --upgrade pip
+  - ps: python -W ignore -m pip install pipenv
+  - ps: $PIPENV_QUIET="true"
+  - pipenv --python %PYTHON_VERSION%
   - pipenv install --dev
+
+test_script:
   - pipenv run pytest --cov=lnmc -vvs
