@@ -1,4 +1,3 @@
-sudo: false
 cache: pip
 language: python
 
@@ -9,7 +8,8 @@ python:
 
 install:
   - pip install pipenv coveralls
-  - pipenv install --dev
+  - PIPENV_VERBOSITY=-1
+  - pipenv install --dev --skip-lock
 
 script:
   - pytest --cov=lnmc -vvs
