@@ -6,6 +6,7 @@
 [![Build Status](https://travis-ci.org/LuqueDaniel/lnmc.svg?branch=master)](https://travis-ci.org/LuqueDaniel/lnmc)
 [![Build status](https://ci.appveyor.com/api/projects/status/mok7jp052rv7j4hb/branch/master?svg=true)](https://ci.appveyor.com/project/LuqueDaniel/lnmc/branch/master)
 [![Coverage Status](https://coveralls.io/repos/github/LuqueDaniel/lnmc/badge.svg?branch=master)](https://coveralls.io/github/LuqueDaniel/lnmc?branch=master)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
 Allows to create symbolic link in batches from a YAML file and consolidate them in a
 specific directory.

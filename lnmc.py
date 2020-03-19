@@ -21,8 +21,9 @@ def yaml_read(yaml_file: str) -> dict:
         return yaml.safe_load(stream.read())
 
 
-def symlink_create(src: pathlib.Path, dst: pathlib.Path, rewrite: bool,
-                   verbose: bool) -> None:
+def symlink_create(
+    src: pathlib.Path, dst: pathlib.Path, rewrite: bool, verbose: bool
+) -> None:
     """Create the symbolic link.
 
     Check that there aren't other files or directories with the same name in
@@ -40,35 +41,43 @@ def symlink_create(src: pathlib.Path, dst: pathlib.Path, rewrite: bool,
     """
     if dst.exists() and rewrite and dst.is_symlink():
         if verbose:
-            cli.secho(f"Symbolic link exists: {dst} Unlinking", fg='cyan')
+            cli.secho(f"Symbolic link exists: {dst} Unlinking", fg="cyan")
         dst.unlink()
     elif not dst.exists() and dst.is_symlink():
         if verbose:
-            cli.secho(f"Symbolic link is broken: {dst} Unlinking", fg='yellow')
+            cli.secho(f"Symbolic link is broken: {dst} Unlinking", fg="yellow")
         dst.unlink()
     elif dst.exists() and not dst.is_symlink():
-        cli.secho("Can't create symlink. The file or directory: "
-                  f"{dst} already exists.", bold=True, fg='red')
+        cli.secho(
+            "Can't create symlink. The file or directory: "
+            f"{dst} already exists.",
+            bold=True,
+            fg="red",
+        )
         return
     elif dst.exists() and not rewrite:
         return
 
     if verbose:
-        cli.secho(f"Creating symlink: {dst}", fg='green', bold=True)
+        cli.secho(f"Creating symlink: {dst}", fg="green", bold=True)
 
     dst.resolve().symlink_to(src.resolve())
 
 
 @cli.command()
-@cli.argument('yaml_file', type=cli.Path(exists=True))
-@cli.argument('src', type=cli.Path(exists=True))
-@cli.argument('dst', type=cli.Path(exists=True))
-@cli.option('--rewrite/--no-rewrite', default=False,
-            help="Overwrite thesymbolic links if exist.")
-@cli.option('--verbose', is_flag=True, help="Enables verbose mode.")
-@cli.version_option(version="1.0.1", prog_name="lnmc")
-def lnmc(yaml_file: str, src: str, dst: str, rewrite: bool,
-         verbose: bool) -> None:
+@cli.argument("yaml_file", type=cli.Path(exists=True))
+@cli.argument("src", type=cli.Path(exists=True))
+@cli.argument("dst", type=cli.Path(exists=True))
+@cli.option(
+    "--rewrite/--no-rewrite",
+    default=False,
+    help="Overwrite thesymbolic links if exist.",
+)
+@cli.option("--verbose", is_flag=True, help="Enables verbose mode.")
+@cli.version_option(version="1.0.2", prog_name="lnmc")
+def lnmc(
+    yaml_file: str, src: str, dst: str, rewrite: bool, verbose: bool
+) -> None:
     """Allows to create symbolic link in batches from a YAML file and
     consolidate them in a specific directory.
 
@@ -90,8 +99,12 @@ def lnmc(yaml_file: str, src: str, dst: str, rewrite: bool,
             subdirs = dirs[directory]
 
         for item in subdirs:
-            if hasattr(item, 'name'):
+            if hasattr(item, "name"):
                 item = item.name
 
-            symlink_create(src_path / item, pathlib.Path(dst).joinpath(item),
-                           rewrite, verbose)
+            symlink_create(
+                src_path / item,
+                pathlib.Path(dst).joinpath(item),
+                rewrite,
+                verbose,
+            )
