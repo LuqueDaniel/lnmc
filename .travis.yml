@@ -28,7 +28,7 @@ jobs:
   include:
     - stage: lint
       script:
-        - pylint lnmc.py
+        - pylint --errors-only lnmc.py
     - stage: format
       script:
         - black -l 80 -t py36 --check --diff lnmc.py setup.py tests/
