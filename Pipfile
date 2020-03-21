@@ -9,6 +9,7 @@ pylint = "*"
 mypy = "*"
 pytest-cov = "*"
 black = "==19.3b0"
+bumpversion = "*"
 
 [packages]
 pyyaml = "*"
