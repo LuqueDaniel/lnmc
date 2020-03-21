@@ -49,8 +49,7 @@ def symlink_create(
         dst.unlink()
     elif dst.exists() and not dst.is_symlink():
         cli.secho(
-            "Can't create symlink. The file or directory: "
-            f"{dst} already exists.",
+            "Can't create symlink. The file or directory: " f"{dst} already exists.",
             bold=True,
             fg="red",
         )
@@ -75,9 +74,7 @@ def symlink_create(
 )
 @cli.option("--verbose", is_flag=True, help="Enables verbose mode.")
 @cli.version_option(version="1.0.2", prog_name="lnmc")
-def lnmc(
-    yaml_file: str, src: str, dst: str, rewrite: bool, verbose: bool
-) -> None:
+def lnmc(yaml_file: str, src: str, dst: str, rewrite: bool, verbose: bool) -> None:
     """Allows to create symbolic link in batches from a YAML file and
     consolidate them in a specific directory.
 
@@ -103,8 +100,5 @@ def lnmc(
                 item = item.name
 
             symlink_create(
-                src_path / item,
-                pathlib.Path(dst).joinpath(item),
-                rewrite,
-                verbose,
+                src_path / item, pathlib.Path(dst).joinpath(item), rewrite, verbose
             )

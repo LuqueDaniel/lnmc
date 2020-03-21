@@ -38,5 +38,5 @@ setuptools.setup(
     entry_points=dict(console_scripts=["lnmc=lnmc:lnmc"]),
     test_suite="tests",
     include_package_data=True,
-    data_file=[('', ['LICENSE', 'README.md'])]
+    data_file=[("", ["LICENSE", "README.md"])],
 )

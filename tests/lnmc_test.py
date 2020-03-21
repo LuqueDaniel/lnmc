@@ -74,8 +74,7 @@ def test_lnmc(setup):
     """Test the full command."""
     runner = CliRunner()
     runner.invoke(
-        lnmc.lnmc,
-        [YAML_TEST_FILE, str(SRC), str(DST), "--rewrite", "--verbose"],
+        lnmc.lnmc, [YAML_TEST_FILE, str(SRC), str(DST), "--rewrite", "--verbose"]
     )
 
     yaml_file = lnmc.yaml_read(YAML_TEST_FILE)

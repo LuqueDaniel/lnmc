@@ -31,7 +31,7 @@ jobs:
         - pylint --errors-only lnmc.py
     - stage: format
       script:
-        - black -l 80 -t py36 --check --diff lnmc.py setup.py tests/
+        - black -t py36 --check --diff .
     - stage: release
       script: skip
       deploy:
