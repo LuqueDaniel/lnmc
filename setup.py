@@ -9,7 +9,7 @@ setuptools.setup(
     license="AGPLv3+",
     description="Allows to create symbolic link in batches from a YAML file "
     "and consolidate them in a specific directory.",
-    url="hpipttps://github.com/LuqueDaniel/lnmc",
+    url="https://github.com/LuqueDaniel/lnmc",
     author="Daniel Luque",
     author_email="danielluque14@gmail.com",
     long_description=open("README.md").read(),
