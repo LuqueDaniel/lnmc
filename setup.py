@@ -20,7 +20,7 @@ setuptools.setup(
         "Intended Audience :: System Administrators",
         "License :: OSI Approved :: "
         "GNU Affero General Public License v3 or later (AGPLv3+)",
-        "Operating Systemp :: POSIX",
+        "Operating System :: POSIX",
         "Operating System :: Microsoft :: Windows",
         "Operating System :: Unix",
         "Operating System :: MacOS",
