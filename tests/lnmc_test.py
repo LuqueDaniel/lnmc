@@ -9,22 +9,22 @@ from click.testing import CliRunner
 
 import lnmc
 
-sys.path.insert(0, '..')
+sys.path.insert(0, "..")
 
-YAML_TEST_FILE = 'tests/test.yaml'
-SRC = Path('tests/src')
-DST = Path('tests/dst')
+YAML_TEST_FILE = "tests/test.yaml"
+SRC = Path("tests/src")
+DST = Path("tests/dst")
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture(scope="module")
 def setup(request):
     """Create src and dst test hierarchy and cleanup after test finalize."""
     SRC.mkdir()
     for subdir in range(3):
-        subdir = Path(f'{SRC}/subdir {subdir}')
+        subdir = Path(f"{SRC}/subdir {subdir}")
         subdir.mkdir()
         for file_ in range(4):
-            Path(f'{subdir}/file {file_}.txt').touch()
+            Path(f"{subdir}/file {file_}.txt").touch()
     DST.mkdir()
 
     request.addfinalizer(cleanup)
@@ -41,7 +41,7 @@ def test_yaml_read():
     assert isinstance(result, dict)
 
 
-@pytest.mark.parametrize('rewrite', [False, True, False])
+@pytest.mark.parametrize("rewrite", [False, True, False])
 def test_symlink_create(setup, rewrite):
     """Try to create symbolic links with different values ​​in the 'rewrite'
     argument."""
@@ -53,26 +53,29 @@ def test_symlink_create(setup, rewrite):
 def test_symlink_create_check(setup):
     """Check if the symbolic link has been created."""
     dst = Path(f"{DST}/file 3.txt")
-    lnmc.symlink_create(Path(f"{SRC}/subdir 1/file 3.txt"),
-                        dst, rewrite=False, verbose=True)
+    lnmc.symlink_create(
+        Path(f"{SRC}/subdir 1/file 3.txt"), dst, rewrite=False, verbose=True
+    )
     assert dst.exists()
     assert dst.is_symlink()
 
 
 def test_symlink_create_file_exists(setup):
     """Test symlink_create when file or directory already exists."""
-    dst = DST.joinpath('file 2.txt')
+    dst = DST.joinpath("file 2.txt")
     dst.touch()
-    lnmc.symlink_create(Path(f"{SRC}/subdir 1/file 2.txt"),
-                        dst, rewrite=False, verbose=True)
+    lnmc.symlink_create(
+        Path(f"{SRC}/subdir 1/file 2.txt"), dst, rewrite=False, verbose=True
+    )
     dst.unlink()
 
 
 def test_lnmc(setup):
-    """Test the full command yaml file included."""
+    """Test the full command."""
     runner = CliRunner()
-    runner.invoke(lnmc.lnmc, [YAML_TEST_FILE, str(SRC), str(DST), '--rewrite',
-                              '--verbose'])
+    runner.invoke(
+        lnmc.lnmc, [YAML_TEST_FILE, str(SRC), str(DST), "--rewrite", "--verbose"]
+    )
 
     yaml_file = lnmc.yaml_read(YAML_TEST_FILE)
 
