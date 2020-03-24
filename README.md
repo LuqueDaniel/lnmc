@@ -17,7 +17,7 @@ Install:
 pip install --user lnmc
 ```
 
-Use:
+Usege:
 
 ```shell
 lnmc addons.yaml ./ destination/
@@ -25,7 +25,7 @@ lnmc addons.yaml ./ destination/
 
 ## Configuration File
 
-lncm as first argument needs a `.yaml` or `.yml` file. The directories, sub-directories
+lnmc as first argument needs a `.yaml` or `.yml` file. The directories, sub-directories
 and files that will be the target for symbolic links are specified in this file. For example.
 
 ```yaml
@@ -47,4 +47,4 @@ mis-builder:
 l10n-spain:
 ```
 
-(Example from an tipical Odoo project)
+(Example of a typical odoo project)
