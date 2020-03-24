@@ -43,13 +43,13 @@ def symlink_create(
         if verbose:
             cli.secho(f"Symbolic link exists: {dst} Unlinking", fg="cyan")
         dst.unlink()
-    elif not dst.exists() and dst.is_symlink():
+    elif not dst.exists() and dst.is_symlink():  # Broken symbolic link
         if verbose:
             cli.secho(f"Symbolic link is broken: {dst} Unlinking", fg="yellow")
         dst.unlink()
     elif dst.exists() and not dst.is_symlink():
         cli.secho(
-            "Can't create symlink. The file or directory: " f"{dst} already exists.",
+            f"Can't create symlink. The file or directory: {dst} already exists.",
             bold=True,
             fg="red",
         )

@@ -1,38 +1,16 @@
 # © 2019 Daniel Luque
 # License AGPLv3 (http://www.gnu.org/licenses/agpl-3.0-standalone.html)
 from pathlib import Path
-import sys
-import shutil
 
 import pytest
 from click.testing import CliRunner
 
 import lnmc
 
-sys.path.insert(0, "..")
+from .helpers import SRC, DST, setup
+
 
 YAML_TEST_FILE = "tests/test.yaml"
-SRC = Path("tests/src")
-DST = Path("tests/dst")
-
-
-@pytest.fixture(scope="module")
-def setup(request):
-    """Create src and dst test hierarchy and cleanup after test finalize."""
-    SRC.mkdir()
-    for subdir in range(3):
-        subdir = Path(f"{SRC}/subdir {subdir}")
-        subdir.mkdir()
-        for file_ in range(4):
-            Path(f"{subdir}/file {file_}.txt").touch()
-    DST.mkdir()
-
-    request.addfinalizer(cleanup)
-
-
-def cleanup():
-    shutil.rmtree(SRC)
-    shutil.rmtree(DST)
 
 
 def test_yaml_read():
@@ -42,32 +20,52 @@ def test_yaml_read():
 
 
 @pytest.mark.parametrize("rewrite", [False, True, False])
-def test_symlink_create(setup, rewrite):
+def test_symlink_create(setup, rewrite, capsys):
     """Try to create symbolic links with different values ​​in the 'rewrite'
     argument."""
-    src = Path(f"{SRC}/subdir 0/file 3.txt")
-    dst = Path(f"{DST}/file 3.txt")
+    src = SRC / "subdir 0/file 3.txt"
+    dst = DST / "file 3.txt"
     lnmc.symlink_create(src, dst, rewrite=rewrite, verbose=True)
+    captured = capsys.readouterr()
+
+    if rewrite:
+        assert captured.out.startswith(f"Symbolic link exists: {dst} Unlinking")
+    elif not rewrite and not dst.exists():
+        assert captured.out == f"Creating symlink: {dst}\n"
 
 
 def test_symlink_create_check(setup):
     """Check if the symbolic link has been created."""
-    dst = Path(f"{DST}/file 3.txt")
-    lnmc.symlink_create(
-        Path(f"{SRC}/subdir 1/file 3.txt"), dst, rewrite=False, verbose=True
-    )
+    dst = DST / "file 3.txt"
+    lnmc.symlink_create(SRC / "subdir 1/file 3.txt", dst, rewrite=False, verbose=True)
+
     assert dst.exists()
     assert dst.is_symlink()
 
 
-def test_symlink_create_file_exists(setup):
+def test_symlink_create_file_exists(setup, capsys):
     """Test symlink_create when file or directory already exists."""
-    dst = DST.joinpath("file 2.txt")
+    dst = DST / "file 2.txt"
     dst.touch()
-    lnmc.symlink_create(
-        Path(f"{SRC}/subdir 1/file 2.txt"), dst, rewrite=False, verbose=True
-    )
+    lnmc.symlink_create(SRC / "subdir 1/file 2.txt", dst, rewrite=False, verbose=True)
+    captured = capsys.readouterr()  # capture std/stderr
     dst.unlink()
+
+    assert (
+        captured.out
+        == f"Can't create symlink. The file or directory: {dst} already exists.\n"
+    )
+
+
+def test_broken_symlink(setup, capsys):
+    """Test broken symlink detection"""
+    src = SRC / "subdir 1/file 4.txt"  # This file don't exist
+    dst = DST / "file 4.txt"
+    dst.resolve().symlink_to(src.resolve())
+    lnmc.symlink_create(src, dst, rewrite=False, verbose=True)
+    captured = capsys.readouterr()
+
+    assert captured.out.startswith(f"Symbolic link is broken: {dst} Unlinking\n")
 
 
 def test_lnmc(setup):
@@ -80,6 +78,10 @@ def test_lnmc(setup):
     yaml_file = lnmc.yaml_read(YAML_TEST_FILE)
 
     for directory in yaml_file:
+        # When create symlink for every element inside of a directory
+        if not yaml_file[directory]:
+            for item in (SRC / directory).iterdir():
+                assert (DST / item.name).exists() and (DST / item.name).is_symlink()
+            continue
         for item in yaml_file[directory]:
-            assert DST.joinpath(item).exists()
-            assert DST.joinpath(item).is_symlink()
+            assert (DST / item).exists() and (DST / item).is_symlink()
