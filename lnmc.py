@@ -11,7 +11,6 @@ import pathlib
 import click as cli
 import yaml
 
-
 cli.core._verify_python3_env = lambda: None  # pylint: disable=W0212
 
 

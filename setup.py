@@ -2,7 +2,6 @@
 # License AGPLv3 (http://www.gnu.org/licenses/agpl-3.0-standalone.html)
 import setuptools
 
-
 setuptools.setup(
     name="lnmc",
     version="1.0.2",
