@@ -29,6 +29,7 @@ jobs:
     - stage: lint
       script:
         - pylint --errors-only lnmc.py
+        - isort -c --diff
     - stage: format
       script:
         - black -t py36 --check --diff .

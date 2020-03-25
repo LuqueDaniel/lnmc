@@ -7,8 +7,7 @@ from click.testing import CliRunner
 
 import lnmc
 
-from .helpers import SRC, DST, setup
-
+from .helpers import DST, SRC, setup
 
 YAML_TEST_FILE = "tests/test.yaml"
 
