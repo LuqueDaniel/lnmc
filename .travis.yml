@@ -8,7 +8,6 @@ python:
 
 install:
   - pip install pipenv coveralls
-  - PIPENV_VERBOSITY=-1
   - pipenv install --dev --skip-lock
 
 script:
@@ -17,24 +16,21 @@ script:
 after_success:
   - coveralls
 
-stages:
-  - test
-  - lint
-  - format
-  - name: release
-    if: tag IS present
-
 jobs:
   include:
-    - stage: lint
+    - stage: Lint and Format
+      name: Lint
       script:
         - pylint --errors-only lnmc.py
         - isort -c --diff
-    - stage: format
+    - stage: Lint and Format
+      name: Format
       script:
         - black -t py36 --check --diff .
-    - stage: release
-      script: skip
+
+    - stage: Release
+      if: tag IS present
+      script: pytest -vvs
       deploy:
         provider: pypi
         username: __token__
