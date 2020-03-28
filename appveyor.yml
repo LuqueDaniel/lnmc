@@ -21,7 +21,7 @@ install:
   - ps: python -W ignore -m pip install pipenv
   - ps: $PIPENV_QUIET="true"
   - pipenv --python %PYTHON_VERSION%
-  - pipenv install --dev
+  - pipenv install --dev --skip-lock
 
 test_script:
   - pipenv run pytest --cov=lnmc -vvs

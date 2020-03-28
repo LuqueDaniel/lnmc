@@ -34,8 +34,11 @@ setuptools.setup(
     ],
     py_modules=["lnmc"],
     install_requires=["Click", "PyYAML"],
-    entry_points=dict(console_scripts=["lnmc=lnmc:lnmc"]),
-    test_suite="tests",
+    extras_require={
+        "test": ["pytest", "pytest-cov"],
+        "dev": ["pylint", "mypy", "black", "isort"],
+    },
+    entry_points={"console_scripts": ["lnmc=lnmc:lnmc"]},
     include_package_data=True,
     data_file=[("", ["LICENSE", "README.md"])],
 )

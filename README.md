@@ -3,7 +3,7 @@
 [![PyPI](https://img.shields.io/pypi/v/lnmc)](https://pypi.org/project/lnmc/)
 ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/lnmc)
 ![PyPI - License](https://img.shields.io/pypi/l/lnmc)
-[![Build Status](https://travis-ci.org/LuqueDaniel/lnmc.svg?branch=master)](https://travis-ci.org/LuqueDaniel/lnmc)
+[![Build Status](https://travis-ci.com/LuqueDaniel/lnmc.svg?branch=master)](https://travis-ci.com/LuqueDaniel/lnmc)
 [![Build status](https://ci.appveyor.com/api/projects/status/mok7jp052rv7j4hb/branch/master?svg=true)](https://ci.appveyor.com/project/LuqueDaniel/lnmc/branch/master)
 [![Coverage Status](https://coveralls.io/repos/github/LuqueDaniel/lnmc/badge.svg?branch=master)](https://coveralls.io/github/LuqueDaniel/lnmc?branch=master)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
@@ -47,4 +47,4 @@ mis-builder:
 l10n-spain:
 ```
 
-(Example of a typical odoo project)
+(Example of a typical Odoo project)
