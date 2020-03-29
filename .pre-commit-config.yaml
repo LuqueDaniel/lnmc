@@ -1,0 +1,23 @@
+# See https://pre-commit.com for more information
+# See https://pre-commit.com/hooks.html for more hooks
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v2.5.0
+    hooks:
+      - id: trailing-whitespace
+        exclude: /README\.rst$|\.pot?$
+      - id: end-of-file-fixer
+      - id: debug-statements
+  # TODO: Check if isort/seed-isort-config work now with lnmc import in tests/lnmc_test.py
+  #- repo: https://github.com/asottile/seed-isort-config
+  #  rev: v2.1.0
+  #  hooks:
+  #    - id: seed-isort-config
+  #- repo: https://github.com/timothycrosley/isort
+  #  rev: 4.3.21  # pick the isort version you'd like to use from https://github.com/timothycrosley/isort/releases
+  #  hooks:
+  #  - id: isort
+  - repo: https://github.com/psf/black
+    rev: 19.10b0
+    hooks:
+      - id: black

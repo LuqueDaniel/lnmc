@@ -36,7 +36,7 @@ setuptools.setup(
     install_requires=["Click", "PyYAML"],
     extras_require={
         "test": ["pytest", "pytest-cov"],
-        "dev": ["pylint", "mypy", "black", "isort"],
+        "dev": ["pylint", "mypy", "black", "isort", "pre-commit"],
     },
     entry_points={"console_scripts": ["lnmc=lnmc:lnmc"]},
     include_package_data=True,
