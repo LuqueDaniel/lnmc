@@ -2,35 +2,25 @@ cache: pip
 language: python
 
 python:
-  - '3.6'
-  - '3.7'
-  - '3.8'
-
-install:
-  - pip install pipenv coveralls
-  - pipenv install --dev --skip-lock
-
-script:
-  - pytest --cov=lnmc -vvs
-
-after_success:
-  - coveralls
+  - "3.6"
+  - "3.7"
+  - "3.8"
+install: pip install tox-travis coveralls
+script: tox
+after_success: coveralls
 
 jobs:
   include:
     - stage: Lint and Format
       name: Lint
-      script:
-        - pylint --errors-only lnmc.py
-        - isort -c --diff
+      script: tox -e lint
     - stage: Lint and Format
       name: Format
-      script:
-        - black -t py36 --check --diff .
+      script: tox -e formatting
 
     - stage: Release
       if: tag IS present
-      script: pytest -vvs
+      script: tox -e py36
       deploy:
         provider: pypi
         username: __token__

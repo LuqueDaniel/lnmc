@@ -11,6 +11,8 @@ pytest-cov = "*"
 black = "==19.3b0"
 isort = "*"
 pre-commit = "*"
+tox = "*"
+tox-pyenv = "*"
 
 [packages]
 pyyaml = "*"
