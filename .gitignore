@@ -5,8 +5,6 @@ build
 dist
 .mypy_cache
 .pytest_cache
-*.pyc
-Pipfile.lock
 .python-version
 
 # Tests
