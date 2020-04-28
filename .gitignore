@@ -5,13 +5,13 @@ build
 dist
 .mypy_cache
 .pytest_cache
-*.pyc
-Pipfile.lock
+.python-version
 
 # Tests
 tests/src
 tests/dst
 .coverage
+.tox/
 
 # Editos
 .vscode

@@ -14,7 +14,14 @@ specific directory.
 Install:
 
 ```shell
-pip install --user lnmc
+pip install lnmc
+```
+
+Dev Install:
+```shell
+git clone https://github.com/LuqueDaniel/lnmc.git
+cd lnmc
+pip install -e ".[test,dev]"
 ```
 
 Usege:

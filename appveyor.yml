@@ -6,22 +6,12 @@ build: off
 environment:
   matrix:
     # List: https://www.appveyor.com/docs/installed-software/#python
-    - PYTHON: "C:\\Python36"
-      PYTHON_VERSION: "3.6"
-    - PYTHON: "C:\\Python37"
-      PYTHON_VERSION: "3.7"
-    - PYTHON: "C:\\Python38"
-      PYTHON_VERSION: "3.8"
+    - TOXENV: py36
+    - TOXENV: py37
+    - TOXENV: py38
 
-init:
-  - ECHO %PYTHON% %PYTHON_VERSION% %HOMEDRIVE%%HOMEPATH%
-
+init: ECHO %PYTHON% %PYTHON_VERSION% %HOMEDRIVE%%HOMEPATH%
 install:
   - ps: python -W ignore -m pip install --upgrade pip
-  - ps: python -W ignore -m pip install pipenv
-  - ps: $PIPENV_QUIET="true"
-  - pipenv --python %PYTHON_VERSION%
-  - pipenv install --dev --skip-lock
-
-test_script:
-  - pipenv run pytest --cov=lnmc -vvs
+  - ps: python -W ignore -m pip install tox
+test_script: tox
