@@ -72,7 +72,7 @@ def symlink_create(
     help="Overwrite thesymbolic links if exist.",
 )
 @cli.option("--verbose", is_flag=True, help="Enables verbose mode.")
-@cli.version_option(version="1.0.2", prog_name="lnmc")
+@cli.version_option(version="1.0.3", prog_name="lnmc")
 def lnmc(yaml_file: str, src: str, dst: str, rewrite: bool, verbose: bool) -> None:
     """Allows to create symbolic link in batches from a YAML file and
     consolidate them in a specific directory.

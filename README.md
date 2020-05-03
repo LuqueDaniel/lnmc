@@ -27,7 +27,7 @@ pip install -e ".[test,dev]"
 Usege:
 
 ```shell
-lnmc addons.yaml ./ destination/
+lnmc addons.yml ./ destination/
 ```
 
 ## Configuration File

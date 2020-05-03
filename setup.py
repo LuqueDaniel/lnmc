@@ -4,7 +4,7 @@ import setuptools
 
 setuptools.setup(
     name="lnmc",
-    version="1.0.2",
+    version="1.0.3",
     license="AGPLv3+",
     description="Allows to create symbolic link in batches from a YAML file "
     "and consolidate them in a specific directory.",
@@ -40,5 +40,5 @@ setuptools.setup(
     },
     entry_points={"console_scripts": ["lnmc=lnmc:lnmc"]},
     include_package_data=True,
-    data_file=[("", ["LICENSE", "README.md"])],
+    data_files=[("", ["LICENSE", "README.md"])],
 )
