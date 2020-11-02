@@ -5,6 +5,8 @@ python:
   - "3.6"
   - "3.7"
   - "3.8"
+  - "3.9"
+stage: Test
 install: pip install tox-travis coveralls
 script: tox
 after_success: coveralls
@@ -16,7 +18,7 @@ jobs:
       script: tox -e lint
     - stage: Lint and Format
       name: Format
-      script: tox -e formatting
+      script: tox -e format
 
     - stage: Release
       if: tag IS present
