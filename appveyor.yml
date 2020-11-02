@@ -9,6 +9,7 @@ environment:
     - TOXENV: py36
     - TOXENV: py37
     - TOXENV: py38
+    - TOXENV: py39
 
 init: ECHO %PYTHON% %PYTHON_VERSION% %HOMEDRIVE%%HOMEPATH%
 install:
