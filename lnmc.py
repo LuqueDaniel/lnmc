@@ -72,7 +72,7 @@ def symlink_create(
     help="Overwrite thesymbolic links if exist.",
 )
 @cli.option("--verbose", is_flag=True, help="Enables verbose mode.")
-@cli.version_option(version="1.0.3", prog_name="lnmc")
+@cli.version_option(version="1.0.5", prog_name="lnmc")
 def lnmc(yaml_file: str, src: str, dst: str, rewrite: bool, verbose: bool) -> None:
     """Allows to create symbolic link in batches from a YAML file and
     consolidate them in a specific directory.
@@ -80,7 +80,7 @@ def lnmc(yaml_file: str, src: str, dst: str, rewrite: bool, verbose: bool) -> No
     The files, directories and sub-directories that are going to be targeted to
     create the symbolic links are specified in a yaml file.
 
-    $ lnmc directories.yaml ~/destination_directory source_directory/
+    $ lnmc directories.yaml source_directory/ destination_directory/
     """
     if verbose:
         cli.echo(f"Reading {cli.style(yaml_file, fg='green')} file.")
@@ -95,7 +95,7 @@ def lnmc(yaml_file: str, src: str, dst: str, rewrite: bool, verbose: bool) -> No
             subdirs = dirs[directory]
 
         for item in subdirs:
-            if hasattr(item, "name"):
+            if isinstance(item, pathlib.Path):
                 item = item.name
 
             symlink_create(
