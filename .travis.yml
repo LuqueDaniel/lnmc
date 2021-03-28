@@ -22,7 +22,7 @@ jobs:
 
     - stage: Release
       if: tag IS present
-      script: tox -e py36
+      script: tox -e py39
       deploy:
         provider: pypi
         username: __token__
@@ -34,4 +34,4 @@ jobs:
         on:
           tags: true
           branch: master
-          python: 3.6
+          python: 3.9
