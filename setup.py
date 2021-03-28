@@ -4,7 +4,7 @@ import setuptools
 
 setuptools.setup(
     name="lnmc",
-    version="1.0.5",
+    version="1.0.6",
     license="AGPLv3+",
     description="Allows to create symbolic link in batches from a YAML file "
     "and consolidate them in a specific directory.",
@@ -35,7 +35,7 @@ setuptools.setup(
     ],
     py_modules=["lnmc"],
     python_requires=">=3.6",
-    install_requires=["Click>=7.1", "PyYAML>5.0"],
+    install_requires=["Click>=7.1", "PyYAML>5.4"],
     extras_require={
         "test": ["pytest", "pytest-cov"],
         "dev": ["pylint", "mypy", "black>=20.8b1", "isort>=5.6", "pre-commit>=2.4"],
