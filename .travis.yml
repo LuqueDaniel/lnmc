@@ -15,13 +15,16 @@ jobs:
   include:
     - stage: Lint and Format
       name: Lint
+      python: 3.9
       script: tox -e lint
     - stage: Lint and Format
       name: Format
+      python: 3.9
       script: tox -e format
 
     - stage: Release
       if: tag IS present
+      python: 3.9
       script: tox -e py39
       deploy:
         provider: pypi
