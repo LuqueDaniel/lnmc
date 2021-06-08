@@ -6,20 +6,31 @@ from pathlib import Path
 
 import pytest
 
+import lnmc
+
 sys.path.insert(0, "..")
 
 SRC = Path("tests/src")
 DST = Path("tests/dst")
+YAML_TEST_FILE = "tests/test.yaml"
+
+
+@pytest.fixture(scope="function")
+def filesystem_actions():
+    return lnmc.FileSystemActions(SRC, DST, verbose=True)
 
 
 @pytest.fixture(scope="module")
-def setup(request):
+def files_setup(request):
     """Create src and dst test hierarchy and cleanup after test finalize."""
+    subdirs_to_create = 3
+    files_to_create = 4
+
     SRC.mkdir()
-    for subdir in range(3):
+    for subdir in range(subdirs_to_create):
         subdir = SRC / f"subdir {subdir}"
         subdir.mkdir()
-        for file_ in range(4):
+        for file_ in range(files_to_create):
             Path(f"{subdir}/file {file_}.txt").touch()
 
     DST.mkdir()
