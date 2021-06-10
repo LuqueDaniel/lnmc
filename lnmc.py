@@ -7,7 +7,8 @@ them in aspecific directory.
 """
 
 import pathlib
-from typing import Generator, Union
+import shutil
+from typing import Generator, NamedTuple, Union
 
 import click as cli
 import yaml
@@ -15,16 +16,30 @@ import yaml
 cli.core._verify_python3_env = lambda: None  # pylint: disable=W0212
 
 
+class PathPair(NamedTuple):
+    src: pathlib.Path
+    dst: pathlib.Path
+
+
 class FileSystemActions:
     def __init__(
         self, src: str, dst: str, rewrite: bool = False, verbose: bool = False
     ) -> None:
-        self.src = src
-        self.dst = dst
+        self.src = pathlib.Path(src)
+        self.dst = pathlib.Path(dst)
         self.rewrite = rewrite
         self.verbose = verbose
 
-    def symlink_create(self, src: pathlib.Path, dst: pathlib.Path) -> None:
+    def _remove_item(self, item: pathlib.Path) -> None:
+        if item.is_dir() and not item.is_symlink():
+            shutil.rmtree(item)
+        else:
+            item.unlink()
+
+    def _is_broken_symlink(self, path: pathlib.Path) -> bool:
+        return not path.exists() and path.is_symlink()
+
+    def _symlink_create(self, src: pathlib.Path, dst: pathlib.Path) -> None:
         """Create the symbolic link.
 
         Check that there aren't other files or directories with the same name in
@@ -32,50 +47,85 @@ class FileSystemActions:
         ignored, unless the `rewrite` argument is True.
 
         Args:
-            src (pathlib.Path): symbolic link origin path.
-            dst (pathlib.Path): destination directory where the symbolic link will
-                                be created.
+            src (pathlib.Path): symbolic link source path.
+            dst (pathlib.Path): symbolic link destination path.
         """
-        if dst.exists() and self.rewrite and dst.is_symlink():
-            if self.verbose:
-                cli.secho(f"Symbolic link exists: {dst} Unlinking", fg="cyan")
-            dst.unlink()
-        elif not dst.exists() and dst.is_symlink():  # Broken symbolic link
+        if dst.exists():
+            if dst.is_symlink():
+                cli.secho(f"Symbolic link already exists: {dst}", fg="cyan")
+            else:
+                cli.secho(
+                    f"The file or directory: {dst} already exists.",
+                    bold=True,
+                    fg="red",
+                )
+            if not self.rewrite:
+                return
+            self._remove_item(dst)
+        elif self._is_broken_symlink(dst):
             if self.verbose:
                 cli.secho(f"Symbolic link is broken: {dst} Unlinking", fg="yellow")
-            dst.unlink()
-        elif dst.exists() and not dst.is_symlink():
-            cli.secho(
-                f"Can't create symlink. The file or directory: {dst} already exists.",
-                bold=True,
-                fg="red",
-            )
-            return
-        elif dst.exists() and not self.rewrite:
-            return
+            self._remove_item(dst)
 
         if self.verbose:
             cli.secho(f"Creating symlink: {dst}", fg="green", bold=True)
-
         dst.resolve().symlink_to(src.resolve())
 
-    def get_directories(self, dirs: dict) -> Generator:
-        for directory in dirs:
-            src_path = pathlib.Path(self.src).joinpath(directory)
-            items: Union[list, Generator] = dirs[directory] or src_path.iterdir()
-            for item in items:
-                if isinstance(item, pathlib.Path):
-                    item = item.name
-                yield (src_path / item, pathlib.Path(self.dst).joinpath(item))
+    def _copy_item(self, src: pathlib.Path, dst: pathlib.Path):
+        """Copy a file from a source path to a destination path.
 
-    def symlink(self, dirs: dict):
+        Args:
+            src (pathlib.Path): source path.
+            dst (pathlib.Path): destination path.
+        """
+        if dst.exists() or self._is_broken_symlink(dst):
+            cli.secho(
+                f"Can't copy. The file or directory: {dst} already exists.",
+                bold=True,
+                fg="red",
+            )
+            if self.rewrite:
+                self._remove_item(dst)
+            else:
+                return
+
+        if self.verbose:
+            cli.secho(f"Copying: {dst}", fg="green", bold=True)
+
+        if src.is_dir():
+            shutil.copytree(src, dst)
+        elif src.is_file():
+            shutil.copy2(src, dst)
+
+    def _get_paths(self, directories: dict) -> Generator[PathPair, None, None]:
+        """Get destination and source paths from a dict.
+
+        Returns: PathPair
+        """
+        for directory in directories:
+            src_path = self.src / directory
+            items: Union[list, Generator] = directories[directory] or src_path.iterdir()
+            for item in items:
+                basename = item if isinstance(item, str) else item.name
+                yield PathPair(src_path / basename, self.dst / basename)
+
+    def symlink(self, directories: dict) -> None:
         """Create symlinks from a dict.
 
         Args:
-            dirs (dict): contains directories and subdirectories/files hierarchy.
+            directories (dict): contains directories and subdirectories/files hierarchy.
         """
-        for item in self.get_directories(dirs):
-            self.symlink_create(item[0], item[1])
+        for item in self._get_paths(directories):
+            self._symlink_create(item.src, item.dst)
+
+    def copy(self, directories: dict) -> None:
+        """Copy files and directories from a dict
+
+        Args:
+            directories (dict): contains directories and files to copy.
+        """
+        for item in self._get_paths(directories):
+            self._copy_item(item.src, item.dst)
 
 
 def yaml_read(yaml_file: str) -> dict:
@@ -89,23 +139,36 @@ def yaml_read(yaml_file: str) -> dict:
 @cli.argument("src", type=cli.Path(exists=True))
 @cli.argument("dst", type=cli.Path(exists=True))
 @cli.option(
+    "--copy/--no-copy",
+    default=False,
+    help="Copy directories and files instead of create symbolic links",
+)
+@cli.option(
     "--rewrite/--no-rewrite",
     default=False,
-    help="Overwrite thesymbolic links if exist.",
+    help="Overwrite the symbolic links if exist.",
 )
 @cli.option("--verbose", is_flag=True, help="Enables verbose mode.")
-@cli.version_option(version="1.1.0", prog_name="lnmc")
-def lnmc(yaml_file: str, src: str, dst: str, rewrite: bool, verbose: bool) -> None:
+@cli.version_option(version="1.2.0", prog_name="lnmc")
+def lnmc(
+    yaml_file: str, src: str, dst: str, copy: bool, rewrite: bool, verbose: bool
+) -> None:
     """Allows to create symbolic link in batches from a YAML file and
     consolidate them in a specific directory.
 
     The files, directories and sub-directories that are going to be targeted to
     create the symbolic links are specified in a yaml file.
 
-    $ lnmc directories.yaml source_directory/ destination_directory/
+    Example:
+
+        $ lnmc directories.yaml source_directory/ destination_directory/
     """
-    obj = FileSystemActions(src, dst, rewrite, verbose)
+    file_actions = FileSystemActions(src, dst, rewrite, verbose)
     if verbose:
         cli.echo(f"Reading {cli.style(yaml_file, fg='green')} file.")
-    dirs = yaml_read(yaml_file)
-    obj.symlink(dirs)
+    directories = yaml_read(yaml_file)
+
+    if copy:
+        file_actions.copy(directories)
+    else:
+        file_actions.symlink(directories)

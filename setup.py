@@ -4,7 +4,7 @@ import setuptools
 
 setuptools.setup(
     name="lnmc",
-    version="1.1.0",
+    version="1.2.0",
     license="AGPLv3+",
     description="Allows to create symbolic link in batches from a YAML file "
     "and consolidate them in a specific directory.",
@@ -19,12 +19,10 @@ setuptools.setup(
         "Intended Audience :: System Administrators",
         "License :: OSI Approved :: "
         "GNU Affero General Public License v3 or later (AGPLv3+)",
-        "Operating System :: POSIX",
         "Operating System :: Microsoft :: Windows",
         "Operating System :: Unix",
         "Operating System :: MacOS",
         "Programming Language :: Python",
-        "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
