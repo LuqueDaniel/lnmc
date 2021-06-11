@@ -23,15 +23,16 @@ def filesystem_actions():
 @pytest.fixture(scope="module")
 def files_setup(request):
     """Create src and dst test hierarchy and cleanup after test finalize."""
-    subdirs_to_create = 3
+    dirs_to_create = 3
     files_to_create = 4
 
     SRC.mkdir()
-    for subdir in range(subdirs_to_create):
-        subdir = SRC / f"subdir {subdir}"
-        subdir.mkdir()
+    for directory in range(dirs_to_create):
+        directory = SRC / f"dir {directory}"
+        directory.mkdir()
         for file_ in range(files_to_create):
-            Path(f"{subdir}/file {file_}.txt").touch()
+            Path(f"{directory}/file {file_}.txt").touch()
+    Path(f"{directory}/subdir {file_}").mkdir()
 
     DST.mkdir()
     request.addfinalizer(cleanup)
