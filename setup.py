@@ -33,7 +33,7 @@ setuptools.setup(
     ],
     py_modules=["lnmc"],
     python_requires=">=3.6",
-    install_requires=["Click>=7.1", "PyYAML>5.4"],
+    install_requires=["Click>=8.0", "PyYAML>5.4"],
     extras_require={
         "test": ["pytest", "pytest-cov"],
         "dev": ["pylint", "mypy", "black>=21.5b2", "isort>=5.6", "pre-commit>=2.4"],

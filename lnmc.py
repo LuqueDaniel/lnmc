@@ -13,8 +13,6 @@ from typing import Generator, NamedTuple, Union
 import click as cli
 import yaml
 
-cli.core._verify_python3_env = lambda: None  # pylint: disable=W0212
-
 
 class PathPair(NamedTuple):
     src: pathlib.Path
@@ -84,10 +82,9 @@ class FileSystemActions:
                 bold=True,
                 fg="red",
             )
-            if self.rewrite:
-                self._remove_item(dst)
-            else:
+            if not self.rewrite:
                 return
+            self._remove_item(dst)
 
         if self.verbose:
             cli.secho(f"Copying: {dst}", fg="green", bold=True)
