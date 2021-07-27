@@ -2,7 +2,7 @@
 # License AGPLv3 (http://www.gnu.org/licenses/agpl-3.0-standalone.html)
 """lnmc
 
-Allows to create symbolic link in batches from a YAML file and consolidate
+Allows to create symbolic links in batches from a YAML file and consolidate
 them in aspecific directory.
 """
 
@@ -50,10 +50,10 @@ class FileSystemActions:
         """
         if dst.exists():
             if dst.is_symlink():
-                cli.secho(f"Symbolic link already exists: {dst}", fg="cyan")
+                cli.secho(f"Symlink already exists: {dst}", fg="cyan")
             else:
                 cli.secho(
-                    f"The file or directory: {dst} already exists.",
+                    f"File or directory: {dst} already exists.",
                     bold=True,
                     fg="red",
                 )
@@ -61,8 +61,7 @@ class FileSystemActions:
                 return
             self._remove_item(dst)
         elif self._is_broken_symlink(dst):
-            if self.verbose:
-                cli.secho(f"Symbolic link is broken: {dst} Unlinking", fg="yellow")
+            cli.secho(f"Symlink is broken: {dst}. Unlinking", fg="yellow")
             self._remove_item(dst)
 
         if self.verbose:
@@ -150,7 +149,7 @@ def yaml_read(yaml_file: str) -> dict:
 def lnmc(
     yaml_file: str, src: str, dst: str, copy: bool, rewrite: bool, verbose: bool
 ) -> None:
-    """Allows to create symbolic link in batches from a YAML file and
+    """Allows to create symbolic links in batches from a YAML file and
     consolidate them in a specific directory.
 
     The files, directories and sub-directories that are going to be targeted to
