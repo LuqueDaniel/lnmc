@@ -15,13 +15,28 @@ import yaml
 
 
 class PathPair(NamedTuple):
+    """Pair of source and destination paths."""
+
     src: pathlib.Path
     dst: pathlib.Path
 
 
 class FileSystemActions:
+    """Perform actions related to the file system such as creating symlinks or copy.
+
+    Args:
+        src (Union[str, pathlib.Path]): source path.
+        dst (Union[str, pathlib.Path]): destination path.
+        rewrite (bool): if True, overwrite existing files or directories.
+        verbose (bool): if True, print actions.
+    """
+
     def __init__(
-        self, src: str, dst: str, rewrite: bool = False, verbose: bool = False
+        self,
+        src: Union[str, pathlib.Path],
+        dst: Union[str, pathlib.Path],
+        rewrite: bool = False,
+        verbose: bool = False,
     ) -> None:
         self.src = pathlib.Path(src)
         self.dst = pathlib.Path(dst)
