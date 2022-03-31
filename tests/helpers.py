@@ -16,7 +16,7 @@ YAML_TEST_FILE = "tests/test.yaml"
 
 
 @pytest.fixture(scope="function")
-def filesystem_actions():
+def filesystem_actions() -> lnmc.FileSystemActions:
     return lnmc.FileSystemActions(SRC, DST, verbose=True)
 
 
@@ -32,7 +32,6 @@ def files_setup(request):
         directory.mkdir()
         for file_ in range(files_to_create):
             Path(f"{directory}/file {file_}.txt").touch()
-    Path(f"{directory}/subdir {file_}").mkdir()
 
     DST.mkdir()
     request.addfinalizer(cleanup)
