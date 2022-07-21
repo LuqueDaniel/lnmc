@@ -30,6 +30,7 @@ def files_setup(request):
     for directory in range(dirs_to_create):
         directory = SRC / f"dir {directory}"
         directory.mkdir()
+        directory.joinpath("dir_copy/").mkdir()
         for file_ in range(files_to_create):
             Path(f"{directory}/file {file_}.txt").touch()
 
