@@ -2,6 +2,8 @@ name: PR Check
 
 on:
   pull_request:
+  push:
+    branches: [master]
 
 jobs:
   lint-format:
@@ -55,7 +57,7 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           path-to-lcov: coverage.lcov
-          flag-name: run-${{ matrix.python-version }}
+          flag-name: Python-${{ matrix.python-version }}
           parallel: true
 
   finish:
