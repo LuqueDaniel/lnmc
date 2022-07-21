@@ -13,6 +13,7 @@ tests/src
 tests/dst
 .coverage
 .tox/
+coverage.lcov
 
 # Editos
 .vscode

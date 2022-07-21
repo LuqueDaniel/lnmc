@@ -43,8 +43,27 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          python -m pip install tox
+          python -m pip install tox coverage
       - name: Test with Python ${{ matrix.python-version }}
         env:
           PY_VERSION: ${{ matrix.python-version }}
-        run: tox -e py$(echo "${PY_VERSION//./}")
+        run: |
+          tox -e py$(echo "${PY_VERSION//./}")
+          coverage lcov
+      - name: Coveralls
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path-to-lcov: coverage.lcov
+          flag-name: run-${{ matrix.python-version }}
+          parallel: true
+
+  finish:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Coveralls Finished
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.github_token }}
+          parallel-finished: true
