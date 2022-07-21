@@ -27,7 +27,7 @@ jobs:
           tox -e format
 
   test:
-    name: Test
+    name: Tests
     runs-on: ubuntu-latest
     strategy:
       matrix:
