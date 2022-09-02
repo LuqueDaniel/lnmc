@@ -11,7 +11,7 @@ from .helpers import DST, SRC, YAML_TEST_FILE, files_setup, filesystem_actions
     "rewrite", [False, True], ids=["Create symlink", "Rewrite symlink"]
 )
 def test_symlink_create(files_setup, filesystem_actions, rewrite, capsys):
-    """Try to create symbolic links with different values ​​in 'rewrite' argument."""
+    """Try to create symbolic links with different values in 'rewrite' argument."""
     filesystem_actions.rewrite = rewrite
     directories = {"dir 0": ["file 3.txt"]}
     filesystem_actions.symlink(directories)
