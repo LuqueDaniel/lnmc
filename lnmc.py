@@ -13,6 +13,8 @@ from typing import Generator, NamedTuple, Union
 import click as cli
 import yaml
 
+__version__ = "1.3.0"
+
 
 class PathPair(NamedTuple):
     """Pair of source and destination paths."""
@@ -160,7 +162,7 @@ def yaml_read(yaml_file: str) -> dict:
     help="Overwrite the symbolic links if exist.",
 )
 @cli.option("--verbose", is_flag=True, help="Enables verbose mode.")
-@cli.version_option(version="1.3.0", prog_name="lnmc")
+@cli.version_option(__version__, prog_name="lnmc")
 def lnmc(
     yaml_file: str, src: str, dst: str, copy: bool, rewrite: bool, verbose: bool
 ) -> None:
