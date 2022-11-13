@@ -1,9 +1,70 @@
+[project]
+name = "lnmc"
+description = "Allows to create symbolic link in batches from a YAML file and consolidate them in a specific directory."
+authors = [{name = "Daniel Luque", email = "danielluque14@gmail.com"}]
+readme = "README.md"
+license = {text = "AGPLv3+"}
+keywords = ["linux", "windows", "devops", "command", "sysadmin", "batches", "symlink", "command-line-tool"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "Intended Audience :: System Administrators",
+    "License :: OSI Approved :: GNU Affero General Public License v3 or later (AGPLv3+)",
+    "Operating System :: Microsoft :: Windows",
+    "Operating System :: POSIX :: Linux",
+    "Operating System :: MacOS",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Topic :: System :: Systems Administration",
+    "Topic :: Utilities",
+    "Topic :: System :: Shells"
+]
+requires-python = ">=3.7"
+dependencies = [
+    "Click ~= 8.0",
+    "PyYAML ~= 5.4"
+]
+dynamic = ["version"]
+
+[project.urls]
+"Source Code"  = "https://github.com/LuqueDaniel/lnmc"
+"Issue Tracker" = "https://github.com/LuqueDaniel/lnmc/issues"
+Documentation = "https://github.com/LuqueDaniel/lnmc/blob/master/README.md"
+
+[project.optional-dependencies]
+dev = [
+    "pylint",
+    "mypy",
+    "black",
+    "isort",
+    "pre-commit",
+    "pytest",
+    "pytest-cov"
+]
+
+[project.scripts]
+lnmc = "lnmc:lnmc"
+
 [build-system]
-requires = ["setuptools >= 60.0.0", "wheel"]
+requires = ["setuptools >= 64.0.0", "wheel"]
 build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+py-modules = ["lnmc"]
+dynamic = {version = {attr = "lnmc.__version__"}}
 
 [tool.black]
 target-version = ["py37"]
 
 [tool.isort]
 known_third_party = ["click", "pytest", "setuptools", "yaml"]
+
+[tool.pylint]
+max-line-length = 88
+
+[tool.pytest.ini_options]
+addopts = "-vvs --cov=lnmc"
