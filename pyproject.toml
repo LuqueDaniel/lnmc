@@ -36,14 +36,20 @@ dynamic = ["version"]
 Documentation = "https://github.com/LuqueDaniel/lnmc/blob/master/README.md"
 
 [project.optional-dependencies]
+test = [
+    "pytest>=7.2.0",
+    "pytest-cov>=4.0.0"
+]
+lint = [
+    "pylint>=2.15.0"
+]
+format = [
+    "black>=22.10",
+    "isort>=5.10",
+]
 dev = [
-    "pylint",
-    "mypy",
-    "black",
-    "isort",
-    "pre-commit",
-    "pytest",
-    "pytest-cov"
+    "mypy>=0.982",
+    "pre-commit>=2.20.0",
 ]
 
 [project.scripts]
