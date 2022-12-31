@@ -35,13 +35,13 @@ class FileSystemActions:
 
     def __init__(
         self,
-        src: Union[str, pathlib.Path],
-        dst: Union[str, pathlib.Path],
+        src: pathlib.Path,
+        dst: pathlib.Path,
         rewrite: bool = False,
         verbose: bool = False,
     ) -> None:
-        self.src = pathlib.Path(src)
-        self.dst = pathlib.Path(dst)
+        self.src = src
+        self.dst = dst
         self.rewrite = rewrite
         self.verbose = verbose
 
@@ -141,36 +141,52 @@ class FileSystemActions:
             self._copy_item(item.src, item.dst)
 
 
-def yaml_read(yaml_file: str) -> dict:
+def yaml_read(yaml_file: pathlib.Path) -> dict:
     """Read the YAML file and return a dictionary."""
     with open(yaml_file, "r", encoding="utf-8") as stream:
         return yaml.safe_load(stream.read())
 
 
 @cli.command()
-@cli.argument("yaml_file", type=cli.Path(exists=True))
-@cli.argument("src", type=cli.Path(exists=True))
-@cli.argument("dst", type=cli.Path(exists=True))
+@cli.argument(
+    "yaml_file", type=cli.Path(exists=True, dir_okay=False, path_type=pathlib.Path)
+)
+@cli.argument(
+    "src", type=cli.Path(exists=True, file_okay=False, path_type=pathlib.Path)
+)
+@cli.argument(
+    "dst",
+    type=cli.Path(exists=True, file_okay=False, writable=True, path_type=pathlib.Path),
+)
 @cli.option(
-    "--copy/--no-copy",
-    default=False,
+    "--copy",
+    is_flag=True,
     help="Copy directories and files instead of create symbolic links",
 )
 @cli.option(
-    "--rewrite/--no-rewrite",
-    default=False,
-    help="Overwrite the symbolic links if exist.",
+    "--rewrite",
+    is_flag=True,
+    help="Overwrite the symbolic links if exist",
 )
-@cli.option("--verbose", is_flag=True, help="Enables verbose mode.")
+@cli.option("-v", "--verbose", is_flag=True, help="Enables verbose mode")
 @cli.version_option(__version__, prog_name="lnmc")
 def lnmc(
-    yaml_file: str, src: str, dst: str, copy: bool, rewrite: bool, verbose: bool
+    yaml_file: pathlib.Path,
+    src: pathlib.Path,
+    dst: pathlib.Path,
+    copy: bool,
+    rewrite: bool,
+    verbose: bool,
 ) -> None:
-    """Allows to create symbolic links in batches from a YAML file and
-    consolidate them in a specific directory.
+    """Create symbolic links in batches from a YAML file and consolidate them
+    in a specific directory.
 
-    The files, directories and sub-directories that are going to be targeted to
-    create the symbolic links are specified in a yaml file.
+    YAML_FILE is a YAML file that contain the directories, subdirectories and files
+    to be symbolically linked.
+
+    SRC source path of the element specified in YAML_FILE.
+
+    DST destination path where the symbolic links will be created.
 
     Example:
 
