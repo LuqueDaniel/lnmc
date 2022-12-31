@@ -6,13 +6,14 @@ import lnmc
 from .helpers import DST, SRC, YAML_TEST_FILE, files_setup
 
 
-@pytest.mark.parametrize("copy", ["--copy", "--no-copy", "--copy"])
-def test_cli(files_setup, copy: str):
+@pytest.mark.parametrize("copy", [True, False])
+def test_cli(files_setup, copy: bool):
     """Test the full command."""
     runner = CliRunner()
-    runner.invoke(
-        lnmc.lnmc, [YAML_TEST_FILE, str(SRC), str(DST), copy, "--rewrite", "--verbose"]
-    )
+    args = [str(YAML_TEST_FILE), str(SRC), str(DST), "--rewrite", "--verbose"]
+    if copy:
+        args.append("--copy")
+    runner.invoke(lnmc.lnmc, args)
     directories = lnmc.yaml_read(YAML_TEST_FILE)
 
     for directory in directories:
