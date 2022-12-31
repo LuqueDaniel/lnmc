@@ -143,7 +143,7 @@ class FileSystemActions:
 
 def yaml_read(yaml_file: str) -> dict:
     """Read the YAML file and return a dictionary."""
-    with open(yaml_file, "r") as stream:
+    with open(yaml_file, "r", encoding="utf-8") as stream:
         return yaml.safe_load(stream.read())
 
 
