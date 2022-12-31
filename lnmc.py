@@ -6,8 +6,8 @@ Allows to create symbolic links in batches from a YAML file and consolidate
 them in aspecific directory.
 """
 
-import pathlib
 import shutil
+from pathlib import Path
 from typing import Generator, NamedTuple, Union
 
 import click as cli
@@ -19,24 +19,24 @@ __version__ = "1.3.0"
 class PathPair(NamedTuple):
     """Pair of source and destination paths."""
 
-    src: pathlib.Path
-    dst: pathlib.Path
+    src: Path
+    dst: Path
 
 
 class FileSystemActions:
     """Perform actions related to the file system such as creating symlinks or copy.
 
     Args:
-        src (Union[str, pathlib.Path]): source path.
-        dst (Union[str, pathlib.Path]): destination path.
+        src (Path): source path.
+        dst (Path): destination path.
         rewrite (bool): if True, overwrite existing files or directories.
         verbose (bool): if True, print actions.
     """
 
     def __init__(
         self,
-        src: pathlib.Path,
-        dst: pathlib.Path,
+        src: Path,
+        dst: Path,
         rewrite: bool = False,
         verbose: bool = False,
     ) -> None:
@@ -45,16 +45,16 @@ class FileSystemActions:
         self.rewrite = rewrite
         self.verbose = verbose
 
-    def _remove_item(self, item: pathlib.Path) -> None:
+    def _remove_item(self, item: Path) -> None:
         if item.is_dir() and not item.is_symlink():
             shutil.rmtree(item)
         else:
             item.unlink()
 
-    def _is_broken_symlink(self, path: pathlib.Path) -> bool:
+    def _is_broken_symlink(self, path: Path) -> bool:
         return not path.exists() and path.is_symlink()
 
-    def _symlink_create(self, src: pathlib.Path, dst: pathlib.Path) -> None:
+    def _symlink_create(self, src: Path, dst: Path) -> None:
         """Create the symbolic link.
 
         Check that there aren't other files or directories with the same name in
@@ -62,8 +62,8 @@ class FileSystemActions:
         ignored, unless the `rewrite` argument is True.
 
         Args:
-            src (pathlib.Path): symbolic link source path.
-            dst (pathlib.Path): symbolic link destination path.
+            src (Path): symbolic link source path.
+            dst (Path): symbolic link destination path.
         """
         if dst.exists():
             if dst.is_symlink():
@@ -85,12 +85,12 @@ class FileSystemActions:
             cli.secho(f"Creating symlink: {dst}", fg="green", bold=True)
         dst.resolve().symlink_to(src.resolve())
 
-    def _copy_item(self, src: pathlib.Path, dst: pathlib.Path):
+    def _copy_item(self, src: Path, dst: Path):
         """Copy a file from a source path to a destination path.
 
         Args:
-            src (pathlib.Path): source path.
-            dst (pathlib.Path): destination path.
+            src (Path): source path.
+            dst (Path): destination path.
         """
         if dst.exists() or self._is_broken_symlink(dst):
             cli.secho(
@@ -141,22 +141,18 @@ class FileSystemActions:
             self._copy_item(item.src, item.dst)
 
 
-def yaml_read(yaml_file: pathlib.Path) -> dict:
+def yaml_read(yaml_file: Path) -> dict:
     """Read the YAML file and return a dictionary."""
     with open(yaml_file, "r", encoding="utf-8") as stream:
         return yaml.safe_load(stream.read())
 
 
 @cli.command()
-@cli.argument(
-    "yaml_file", type=cli.Path(exists=True, dir_okay=False, path_type=pathlib.Path)
-)
-@cli.argument(
-    "src", type=cli.Path(exists=True, file_okay=False, path_type=pathlib.Path)
-)
+@cli.argument("yaml_file", type=cli.Path(exists=True, dir_okay=False, path_type=Path))
+@cli.argument("src", type=cli.Path(exists=True, file_okay=False, path_type=Path))
 @cli.argument(
     "dst",
-    type=cli.Path(exists=True, file_okay=False, writable=True, path_type=pathlib.Path),
+    type=cli.Path(exists=True, file_okay=False, writable=True, path_type=Path),
 )
 @cli.option(
     "--copy",
@@ -171,9 +167,9 @@ def yaml_read(yaml_file: pathlib.Path) -> dict:
 @cli.option("-v", "--verbose", is_flag=True, help="Enables verbose mode")
 @cli.version_option(__version__, prog_name="lnmc")
 def lnmc(
-    yaml_file: pathlib.Path,
-    src: pathlib.Path,
-    dst: pathlib.Path,
+    yaml_file: Path,
+    src: Path,
+    dst: Path,
     copy: bool,
     rewrite: bool,
     verbose: bool,
