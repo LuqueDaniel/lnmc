@@ -12,7 +12,7 @@ sys.path.insert(0, "..")
 
 SRC = Path("tests/src")
 DST = Path("tests/dst")
-YAML_TEST_FILE = "tests/test.yaml"
+YAML_TEST_FILE = Path("tests/test.yaml")
 
 
 @pytest.fixture(scope="function")
