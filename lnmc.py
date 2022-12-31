@@ -8,7 +8,7 @@ them in aspecific directory.
 
 import shutil
 from pathlib import Path
-from typing import Generator, NamedTuple, Union
+from typing import Any, Generator, NamedTuple, Union
 
 import click as cli
 import yaml
@@ -67,9 +67,9 @@ class FileSystemActions:
         """
         if dst.exists():
             if dst.is_symlink():
-                cli.secho(f"Symlink already exists: {dst}", fg="cyan")
+                echo(f"Symlink already exists: {dst}", fg="cyan")
             else:
-                cli.secho(
+                echo(
                     f"File or directory: {dst} already exists.",
                     bold=True,
                     fg="red",
@@ -78,11 +78,10 @@ class FileSystemActions:
                 return
             self._remove_item(dst)
         elif self._is_broken_symlink(dst):
-            cli.secho(f"Symlink is broken: {dst}. Unlinking", fg="yellow")
+            echo(f"Symlink is broken: {dst}. Unlinking", fg="yellow")
             self._remove_item(dst)
 
-        if self.verbose:
-            cli.secho(f"Creating symlink: {dst}", fg="green", bold=True)
+        echo(f"Creating symlink: {dst}", fg="green", display=self.verbose)
         dst.resolve().symlink_to(src.resolve())
 
     def _copy_item(self, src: Path, dst: Path):
@@ -93,7 +92,7 @@ class FileSystemActions:
             dst (Path): destination path.
         """
         if dst.exists() or self._is_broken_symlink(dst):
-            cli.secho(
+            echo(
                 f"Can't copy. The file or directory: {dst} already exists.",
                 bold=True,
                 fg="red",
@@ -103,7 +102,7 @@ class FileSystemActions:
             self._remove_item(dst)
 
         if self.verbose:
-            cli.secho(f"Copying: {dst}", fg="green", bold=True)
+            echo(f"Copying: {dst}", fg="green")
 
         if src.is_dir():
             shutil.copytree(src, dst)
@@ -139,6 +138,12 @@ class FileSystemActions:
         """
         for item in self._get_paths(directories):
             self._copy_item(item.src, item.dst)
+
+
+def echo(message: str, display: bool = True, **styles: Any):
+    """Wraps click.secho function with a display check."""
+    if display:
+        cli.secho(message, **styles)
 
 
 def yaml_read(yaml_file: Path) -> dict:
@@ -189,8 +194,7 @@ def lnmc(
         $ lnmc directories.yaml source_directory/ destination_directory/
     """
     file_actions = FileSystemActions(src, dst, rewrite, verbose)
-    if verbose:
-        cli.echo(f"Reading {cli.style(yaml_file, fg='green')} file.")
+    echo(f"Reading {cli.style(yaml_file, fg='green')} file.", display=verbose)
     directories = yaml_read(yaml_file)
 
     if copy:
