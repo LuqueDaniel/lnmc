@@ -54,6 +54,17 @@ class FileSystemActions:
     def _is_broken_symlink(self, path: Path) -> bool:
         return not path.exists() and path.is_symlink()
 
+    def _check_destination_exists(self, dst: Path) -> bool:
+        if self._is_broken_symlink(dst):
+            echo(f"A broken symbolic link already exists: {dst}", fg="red")
+        elif dst.is_symlink():
+            echo(f"A symbolic link already exists: {dst}")
+        elif dst.exists():
+            echo(f"A file or directory already exists: {dst}")
+        else:
+            return False
+        return True
+
     def _symlink_create(self, src: Path, dst: Path) -> None:
         """Create the symbolic link.
 
@@ -65,22 +76,10 @@ class FileSystemActions:
             src (Path): symbolic link source path.
             dst (Path): symbolic link destination path.
         """
-        if dst.exists():
-            if dst.is_symlink():
-                echo(f"Symlink already exists: {dst}", fg="cyan")
-            else:
-                echo(
-                    f"File or directory: {dst} already exists.",
-                    bold=True,
-                    fg="red",
-                )
+        if self._check_destination_exists(dst):
             if not self.rewrite:
                 return
             self._remove_item(dst)
-        elif self._is_broken_symlink(dst):
-            echo(f"Symlink is broken: {dst}. Unlinking", fg="yellow")
-            self._remove_item(dst)
-
         echo(f"Creating symlink: {dst}", fg="green", display=self.verbose)
         dst.resolve().symlink_to(src.resolve())
 

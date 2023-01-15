@@ -20,7 +20,7 @@ def test_symlink_create(files_setup, filesystem_actions, rewrite, capsys):
     captured = capsys.readouterr()
     if captured.out == f"Creating symlink: {dst}\n":
         assert True
-    elif captured.out.startswith(f"Symlink already exists: {dst}"):
+    elif captured.out.startswith(f"A symbolic link already exists: {dst}"):
         assert True
     else:
         assert False
@@ -35,7 +35,7 @@ def test_symlink_create_file_exists(files_setup, filesystem_actions, capsys):
 
     captured = capsys.readouterr()  # capture std/stderr
     dst.unlink()
-    assert captured.out.startswith(f"File or directory: {dst} already exists.")
+    assert captured.out.startswith(f"A file or directory already exists: {dst}")
 
 
 @pytest.mark.parametrize(
@@ -51,4 +51,4 @@ def test_symlink_broken(files_setup, filesystem_actions, capsys, rewrite, file_)
     filesystem_actions.symlink(directories)
 
     captured = capsys.readouterr()
-    assert captured.out.startswith(f"Symlink is broken: {dst}. Unlinking\n")
+    assert captured.out.startswith(f"A broken symbolic link already exists: {dst}")

@@ -16,9 +16,7 @@ def test_copy_item(files_setup, filesystem_actions, rewrite, capsys):
 
     dst = PurePath(DST / "dir_copy")
     captured = capsys.readouterr()
-    if captured.out == f"Copying: {dst}\n":
-        assert True
-    elif captured.out.startswith(f"Overwritten: {dst}"):
+    if captured.out.startswith(f"Copying: {dst}"):
         assert True
     elif captured.out.startswith(
         f"Can't copy. The file or directory: {dst} already exists."
