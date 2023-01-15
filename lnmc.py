@@ -65,6 +65,13 @@ class FileSystemActions:
             return False
         return True
 
+    def _can_create_item(self, dst) -> bool:
+        if self._check_destination_exists(dst):
+            if not self.rewrite:
+                return False
+            self._remove_item(dst)
+        return True
+
     def _symlink_create(self, src: Path, dst: Path) -> None:
         """Create the symbolic link.
 
@@ -76,12 +83,9 @@ class FileSystemActions:
             src (Path): symbolic link source path.
             dst (Path): symbolic link destination path.
         """
-        if self._check_destination_exists(dst):
-            if not self.rewrite:
-                return
-            self._remove_item(dst)
-        echo(f"Creating symlink: {dst}", fg="green", display=self.verbose)
-        dst.resolve().symlink_to(src.resolve())
+        if self._can_create_item(dst):
+            echo(f"Creating symlink {dst} -> {src}", fg="green")
+            dst.resolve().symlink_to(src.resolve())
 
     def _copy_item(self, src: Path, dst: Path):
         """Copy a file from a source path to a destination path.
@@ -90,23 +94,12 @@ class FileSystemActions:
             src (Path): source path.
             dst (Path): destination path.
         """
-        if dst.exists() or self._is_broken_symlink(dst):
-            echo(
-                f"Can't copy. The file or directory: {dst} already exists.",
-                bold=True,
-                fg="red",
-            )
-            if not self.rewrite:
-                return
-            self._remove_item(dst)
-
-        if self.verbose:
-            echo(f"Copying: {dst}", fg="green")
-
-        if src.is_dir():
-            shutil.copytree(src, dst)
-        elif src.is_file():
-            shutil.copy2(src, dst)
+        if self._can_create_item(dst):
+            echo(f"Copying {dst} from {src}", fg="green")
+            if src.is_dir():
+                shutil.copytree(src, dst)
+            elif src.is_file():
+                shutil.copy2(src, dst)
 
     def _get_paths(self, directories: dict) -> Generator[PathPair, None, None]:
         """Get destination and source paths from a dict.

@@ -18,7 +18,7 @@ def test_symlink_create(files_setup, filesystem_actions, rewrite, capsys):
 
     dst = PurePath(DST / "file 3.txt")
     captured = capsys.readouterr()
-    if captured.out == f"Creating symlink: {dst}\n":
+    if captured.out.startswith(f"Creating symlink {dst}"):
         assert True
     elif captured.out.startswith(f"A symbolic link already exists: {dst}"):
         assert True
