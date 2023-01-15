@@ -3,7 +3,7 @@
 """lnmc
 
 Allows to create symbolic links in batches from a YAML file and consolidate
-them in aspecific directory.
+them in a specific directory.
 """
 
 import shutil
@@ -24,13 +24,14 @@ class PathPair(NamedTuple):
 
 
 class FileSystemActions:
-    """Perform actions related to the file system such as creating symlinks or copy.
+    """Perform actions related to the file system such as creating symlinks or
+    copy items.
 
     Args:
-        src (Path): source path.
-        dst (Path): destination path.
-        rewrite (bool): if True, overwrite existing files or directories.
-        verbose (bool): if True, print actions.
+        src: source path.
+        dst: destination path.
+        rewrite: if True, overwrite existing files or directories.
+        verbose: if True, print actions.
     """
 
     def __init__(
@@ -46,6 +47,7 @@ class FileSystemActions:
         self.verbose = verbose
 
     def _remove_item(self, item: Path) -> None:
+        echo(f"Removing: {item}", fg="red", display=self.verbose)
         if item.is_dir() and not item.is_symlink():
             shutil.rmtree(item)
         else:
@@ -56,11 +58,11 @@ class FileSystemActions:
 
     def _check_destination_exists(self, dst: Path) -> bool:
         if self._is_broken_symlink(dst):
-            echo(f"A broken symbolic link already exists: {dst}", fg="red")
+            echo(f"A broken symbolic link already exists: {cli.style(dst, fg='red')}")
         elif dst.is_symlink():
-            echo(f"A symbolic link already exists: {dst}")
+            echo(f"A symbolic link already exists: {cli.style(dst, fg='yellow')}")
         elif dst.exists():
-            echo(f"A file or directory already exists: {dst}")
+            echo(f"A file or directory already exists: {cli.style(dst, fg='yellow')}")
         else:
             return False
         return True
@@ -80,19 +82,19 @@ class FileSystemActions:
         ignored, unless the `rewrite` argument is True.
 
         Args:
-            src (Path): symbolic link source path.
-            dst (Path): symbolic link destination path.
+            src: symbolic link source path.
+            dst: symbolic link destination path.
         """
         if self._can_create_item(dst):
-            echo(f"Creating symlink {dst} -> {src}", fg="green")
+            echo(f"Creating symbolic link {dst} -> {src}", fg="green")
             dst.resolve().symlink_to(src.resolve())
 
     def _copy_item(self, src: Path, dst: Path):
-        """Copy a file from a source path to a destination path.
+        """Copy a file or a directory from a source path to a destination path.
 
         Args:
-            src (Path): source path.
-            dst (Path): destination path.
+            src: source path.
+            dst: destination path.
         """
         if self._can_create_item(dst):
             echo(f"Copying {dst} from {src}", fg="green")
@@ -117,7 +119,7 @@ class FileSystemActions:
         """Create symlinks from a dict.
 
         Args:
-            directories (dict): contains directories and subdirectories/files hierarchy.
+            directories: contains directories and subdirectories/files hierarchy.
         """
         for item in self._get_paths(directories):
             self._symlink_create(item.src, item.dst)
@@ -126,7 +128,7 @@ class FileSystemActions:
         """Copy files and directories from a dict
 
         Args:
-            directories (dict): contains directories and files to copy.
+            directories: contains directories and files to copy.
         """
         for item in self._get_paths(directories):
             self._copy_item(item.src, item.dst)
