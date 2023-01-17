@@ -1,54 +1,74 @@
 # © 2019 Daniel Luque
 # License AGPLv3 (http://www.gnu.org/licenses/agpl-3.0-standalone.html)
-from pathlib import PurePath
+from pathlib import Path
 
 import pytest
 
-from .helpers import DST, SRC, YAML_TEST_FILE, files_setup, filesystem_actions
+from lnmc import FileSystemActions, PathPair
+
+from .helpers import create_test_file, filesystem_actions
 
 
-@pytest.mark.parametrize(
-    "rewrite", [False, True], ids=["Create symlink", "Rewrite symlink"]
-)
-def test_symlink_create(files_setup, filesystem_actions, rewrite, capsys):
-    """Try to create symbolic links with different values in 'rewrite' argument."""
-    filesystem_actions.rewrite = rewrite
-    directories = {"dir 0": ["file 3.txt"]}
-    filesystem_actions.symlink(directories)
+class TestSymlink:
+    @pytest.mark.parametrize(
+        "rewrite", [False, True], ids=["create symlink", "overwrite symlink"]
+    )
+    def test_symlink_create(
+        self,
+        create_test_file: PathPair,
+        filesystem_actions: FileSystemActions,
+        rewrite: bool,
+        capsys,
+    ):
+        """Test to create symbolic links with different values in 'rewrite' argument."""
+        if rewrite:
+            Path(create_test_file.dst).symlink_to(create_test_file.src.resolve())
+        filesystem_actions.rewrite = rewrite
+        filesystem_actions._symlink_create(*create_test_file)
 
-    dst = PurePath(DST / "file 3.txt")
-    captured = capsys.readouterr()
-    if captured.out.startswith(f"Creating symbolic link {dst}"):
-        assert True
-    elif captured.out.startswith(f"A symbolic link already exists: {dst}"):
-        assert True
-    else:
-        assert False
+        captured = capsys.readouterr()
+        if captured.out.startswith(f"Creating symbolic link {create_test_file.dst}"):
+            assert True
+        elif (
+            captured.out.startswith(
+                f"A symbolic link already exists: {create_test_file.dst}"
+            )
+            and rewrite
+        ):
+            assert True
+        else:
+            assert False
 
+    def test_symlink_create_file_exists(
+        self, create_test_file: PathPair, filesystem_actions: FileSystemActions, capsys
+    ):
+        """Test symlink_create when file or directory already exists."""
+        # Create destination file
+        create_test_file.dst.touch()
 
-def test_symlink_create_file_exists(files_setup, filesystem_actions, capsys):
-    """Test symlink_create when file or directory already exists."""
-    dst = DST / "file 2.txt"
-    dst.touch()
-    directories = {"dir 1": ["file 2.txt"]}
-    filesystem_actions.symlink(directories)
+        filesystem_actions._symlink_create(*create_test_file)
 
-    captured = capsys.readouterr()  # capture std/stderr
-    dst.unlink()
-    assert captured.out.startswith(f"A file or directory already exists: {dst}")
+        captured = capsys.readouterr()  # capture std/stderr
+        assert captured.out.startswith(
+            f"A file or directory already exists: {create_test_file.dst}"
+        )
 
+    def test_symlink_broken(
+        self,
+        create_test_file: PathPair,
+        filesystem_actions: FileSystemActions,
+        tmp_path: Path,
+        capsys,
+    ):
+        """Test broken symlink detection"""
+        # Create a broken symlink
+        src = tmp_path / "dir/file_dont_exist.txt"
+        create_test_file.dst.resolve().symlink_to(src.resolve())
 
-@pytest.mark.parametrize(
-    "rewrite,file_", [(False, "file_dont_exist.txt"), (True, "file 4.txt")]
-)
-def test_symlink_broken(files_setup, filesystem_actions, capsys, rewrite, file_):
-    """Test broken symlink detection"""
-    filesystem_actions.rewrite = rewrite
-    src = SRC / f"dir 1/{file_}"
-    dst = DST / file_
-    dst.resolve().symlink_to(src.resolve())
-    directories = {"dir 1": [file_]}
-    filesystem_actions.symlink(directories)
+        filesystem_actions.rewrite = True
+        filesystem_actions._symlink_create(*create_test_file)
 
-    captured = capsys.readouterr()
-    assert captured.out.startswith(f"A broken symbolic link already exists: {dst}")
+        captured = capsys.readouterr()
+        assert captured.out.startswith(
+            f"A broken symbolic link already exists: {create_test_file.dst}"
+        )
