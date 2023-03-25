@@ -4,16 +4,19 @@ build
 dist
 .venv
 *.egg-info
-.mypy_cache
-.pytest_cache
-.python-version
 
 # Tests
+.pytest_cache
 tests/src
 tests/dst
 .coverage
-.tox/
 coverage.lcov
+
+# Tools
+.python-version
+.ruff_cache/
+.mypy_cache
+.tox/
 
 # Editos
 .vscode
