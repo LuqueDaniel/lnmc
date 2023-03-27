@@ -5,11 +5,12 @@ from click.testing import CliRunner
 
 import lnmc
 
-from .helpers import DST, YAML_TEST_FILE, create_test_tree
+from .conftest import DST, YAML_TEST_FILE
 
 
+@pytest.mark.usefixtures("create_test_tree")
 @pytest.mark.parametrize("copy", [True, False], ids=("copy", "symlink"))
-def test_cli(create_test_tree, tmp_path: Path, copy: bool):
+def test_cli(tmp_path: Path, copy: bool) -> None:
     """Test the full command."""
     args = [str(YAML_TEST_FILE), str(tmp_path), str(DST), "--rewrite", "--verbose"]
     if copy:
