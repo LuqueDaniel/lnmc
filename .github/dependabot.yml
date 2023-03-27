@@ -9,7 +9,12 @@ updates:
     directory: "/"
     schedule:
       interval: monthly
-    assignees:
-      - LuqueDaniel
     commit-message:
-      prefix: deps
+      prefix: Deps
+  # GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: monthly
+    commit-message:
+      prefix: Deps
