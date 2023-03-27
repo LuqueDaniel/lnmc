@@ -2,8 +2,6 @@ import pytest
 
 from lnmc import FileSystemActions, PathPair
 
-from .helpers import create_test_file, filesystem_actions
-
 
 @pytest.mark.parametrize(
     "rewrite", [False, True], ids=["create copy", "overwrite copy"]
@@ -12,8 +10,8 @@ def test_copy_item(
     create_test_file: PathPair,
     filesystem_actions: FileSystemActions,
     rewrite: bool,
-    capsys,
-):
+    capsys: pytest.CaptureFixture[str],
+) -> None:
     """Test to copy with different values in 'rewrite' argument."""
     if rewrite:
         create_test_file.dst.touch()
@@ -31,4 +29,4 @@ def test_copy_item(
     ):
         assert True
     else:
-        assert False
+        pytest.raises(AssertionError)

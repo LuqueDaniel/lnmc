@@ -1,3 +1,7 @@
+[build-system]
+requires = ["setuptools >= 67.5.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "lnmc"
 description = "Allows to create symbolic link in batches from a YAML file and consolidate them in a specific directory."
@@ -25,8 +29,8 @@ classifiers = [
 ]
 requires-python = ">=3.7"
 dependencies = [
-    "Click ~= 8.0",
-    "PyYAML >= 5.4,< 7.0"
+    "Click ~= 8.0.4",
+    "PyYAML ~= 6.0.0"
 ]
 dynamic = ["version"]
 
@@ -36,28 +40,20 @@ dynamic = ["version"]
 Documentation = "https://github.com/LuqueDaniel/lnmc/blob/master/README.md"
 
 [project.optional-dependencies]
-test = [
-    "pytest>=7.2.0",
-    "pytest-cov>=4.0.0"
-]
-lint = [
-    "pylint>=2.15.0"
-]
-format = [
-    "black>=22.10",
-    "isort>=5.10",
-]
 dev = [
-    "mypy>=0.982",
-    "pre-commit>=2.20.0",
+    "pre-commit >= 2.20.0",
+    "black >= 22.10",
+    "isort >= 5.10",
+    "ruff >= 0.0.259",
+    "mypy >= 0.982",
+    "pytest >= 7.2.0",
+    "pytest-cov >= 4.0.0",
+    "types-setuptools == 67.5.0",
+    "types-PyYAML",
 ]
 
 [project.scripts]
 lnmc = "lnmc:lnmc"
-
-[build-system]
-requires = ["setuptools >= 64.0.0", "wheel"]
-build-backend = "setuptools.build_meta"
 
 [tool.setuptools]
 py-modules = ["lnmc"]
@@ -67,10 +63,18 @@ dynamic = {version = {attr = "lnmc.__version__"}}
 target-version = ["py37"]
 
 [tool.isort]
+profile = "black"
 known_third_party = ["click", "pytest", "setuptools", "yaml"]
-
-[tool.pylint]
-max-line-length = 88
 
 [tool.pytest.ini_options]
 addopts = "-vvs --cov=lnmc"
+
+[tool.ruff]
+target-version = "py37"
+src = ["."]
+fix = false
+line-length = 88  # its default
+select = ["F", "E", "W", "C", "B", "N"]
+
+[tool.mypy]
+strict = true

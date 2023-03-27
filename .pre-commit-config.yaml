@@ -2,21 +2,35 @@
 # See https://pre-commit.com/hooks.html for more hooks
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v3.4.0
+    rev: v4.4.0
     hooks:
       - id: check-ast
       - id: check-docstring-first
-      - id: trailing-whitespace
-        exclude: /README\.rst$|\.pot?$
       - id: end-of-file-fixer
       - id: debug-statements
+      - id: trailing-whitespace
+        exclude: /README\.rst$|\.pot?$
       - id: check-toml
       - id: check-yaml
+        args:
+          - --unsafe
+  - repo: https://github.com/charliermarsh/ruff-pre-commit
+    rev: v0.0.259
+    hooks:
+      - id: ruff
   - repo: https://github.com/psf/black
-    rev: 20.8b1
+    rev: 23.1.0
     hooks:
       - id: black
-  - repo: https://github.com/timothycrosley/isort
-    rev: 5.7.0  # pick the isort version you'd like to use from https://github.com/timothycrosley/isort/releases
+  - repo: https://github.com/pycqa/isort
+    rev: 5.12.0
     hooks:
-    - id: isort
+      - id: isort
+        name: isort (python)
+        args: ["--profile", "black", "--filter-files"]
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: "v1.1.1"
+    hooks:
+      - id: mypy
+        args: [--strict]
+        additional_dependencies: ["Click~=8.0.4", "types-PyYAML", "pytest>=7.2.0"]

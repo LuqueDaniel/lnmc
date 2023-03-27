@@ -1,4 +1,4 @@
-# © 2019 Daniel Luque
+# © 2023 Daniel Luque
 # License AGPLv3 (http://www.gnu.org/licenses/agpl-3.0-standalone.html)
 import shutil
 import sys
@@ -41,8 +41,8 @@ def create_test_tree(tmp_path: Path) -> Generator[None, None, None]:
             item.parent.mkdir()
             item.touch()
             continue
-        for item in directories[directory]:
-            Path(path / item).touch()
+        for file in directories[directory]:
+            Path(path / file).touch()
     DST.mkdir(exist_ok=True)
     yield None
     shutil.rmtree(DST)
