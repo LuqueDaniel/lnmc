@@ -15,6 +15,8 @@ import yaml
 
 __version__ = "1.3.0"
 
+DirectoriesDict = dict[str, list[str]]
+
 
 class PathPair(NamedTuple):
     """Pair of source and destination paths."""
@@ -67,7 +69,7 @@ class FileSystemActions:
             return False
         return True
 
-    def _can_create_item(self, dst) -> bool:
+    def _can_create_item(self, dst: Path) -> bool:
         if self._check_destination_exists(dst):
             if not self.rewrite:
                 return False
@@ -89,7 +91,7 @@ class FileSystemActions:
             echo(f"Creating symbolic link {dst} -> {src}", fg="green")
             dst.resolve().symlink_to(src.resolve())
 
-    def _copy_item(self, src: Path, dst: Path):
+    def _copy_item(self, src: Path, dst: Path) -> None:
         """Copy a file or a directory from a source path to a destination path.
 
         Args:
@@ -103,19 +105,23 @@ class FileSystemActions:
             elif src.is_file():
                 shutil.copy2(src, dst)
 
-    def _get_paths(self, directories: dict) -> Generator[PathPair, None, None]:
+    def _get_paths(
+        self, directories: DirectoriesDict
+    ) -> Generator[PathPair, None, None]:
         """Get destination and source paths from a dict.
 
         Returns: PathPair
         """
         for directory in directories:
             src_path = self.src / directory
-            items: Union[list, Generator] = directories[directory] or src_path.iterdir()
+            items: Union[list[str], Generator[Path, None, None]] = (
+                directories[directory] or src_path.iterdir()
+            )
             for item in items:
                 basename = item if isinstance(item, str) else item.name
                 yield PathPair(src_path / basename, self.dst / basename)
 
-    def symlink(self, directories: dict) -> None:
+    def symlink(self, directories: DirectoriesDict) -> None:
         """Create symlinks from a dict.
 
         Args:
@@ -124,7 +130,7 @@ class FileSystemActions:
         for item in self._get_paths(directories):
             self._symlink_create(item.src, item.dst)
 
-    def copy(self, directories: dict) -> None:
+    def copy(self, directories: DirectoriesDict) -> None:
         """Copy files and directories from a dict
 
         Args:
@@ -134,16 +140,22 @@ class FileSystemActions:
             self._copy_item(item.src, item.dst)
 
 
-def echo(message: str, display: bool = True, **styles: Any):
+def echo(message: str, display: bool = True, **styles: Any) -> None:
     """Wraps click.secho function with a display check."""
     if display:
         cli.secho(message, **styles)
 
 
-def yaml_read(yaml_file: Path) -> dict:
+def yaml_read(yaml_file: Path) -> DirectoriesDict:
     """Read the YAML file and return a dictionary."""
     with open(yaml_file, "r", encoding="utf-8") as stream:
-        return yaml.safe_load(stream.read())
+        result = yaml.safe_load(stream.read())
+        if not isinstance(result, dict):
+            raise cli.UsageError(
+                f"The file {yaml_file} does not match the expected format. "
+                "Please check the file content and try again."
+            )
+        return result
 
 
 @cli.command()
