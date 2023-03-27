@@ -8,14 +8,14 @@ them in a specific directory.
 
 import shutil
 from pathlib import Path
-from typing import Any, Generator, NamedTuple, Union
+from typing import Any, Dict, Generator, List, NamedTuple, Union
 
 import click as cli
 import yaml
 
 __version__ = "1.3.0"
 
-DirectoriesDict = dict[str, list[str]]
+DirectoriesDict = Dict[str, List[str]]
 
 
 class PathPair(NamedTuple):
@@ -114,7 +114,7 @@ class FileSystemActions:
         """
         for directory in directories:
             src_path = self.src / directory
-            items: Union[list[str], Generator[Path, None, None]] = (
+            items: Union[List[str], Generator[Path, None, None]] = (
                 directories[directory] or src_path.iterdir()
             )
             for item in items:

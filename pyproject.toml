@@ -29,8 +29,8 @@ classifiers = [
 ]
 requires-python = ">=3.7"
 dependencies = [
-    "Click ~= 8.0",
-    "PyYAML >= 5.4,< 7.0"
+    "Click ~= 8.0.4",
+    "PyYAML ~= 6.0.0"
 ]
 dynamic = ["version"]
 
@@ -40,20 +40,16 @@ dynamic = ["version"]
 Documentation = "https://github.com/LuqueDaniel/lnmc/blob/master/README.md"
 
 [project.optional-dependencies]
-test = [
-    "pytest >= 7.2.0",
-    "pytest-cov >= 4.0.0"
-]
-lint = [
-    "ruff >= 0.0.259",
-    "mypy >= 0.982",
-]
-format = [
-    "black >= 22.10",
-    "isort >= 5.10",
-]
 dev = [
     "pre-commit >= 2.20.0",
+    "black >= 22.10",
+    "isort >= 5.10",
+    "ruff >= 0.0.259",
+    "mypy >= 0.982",
+    "pytest >= 7.2.0",
+    "pytest-cov >= 4.0.0",
+    "types-setuptools == 67.5.0",
+    "types-PyYAML",
 ]
 
 [project.scripts]

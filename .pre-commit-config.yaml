@@ -33,4 +33,4 @@ repos:
     hooks:
       - id: mypy
         args: [--strict]
-        additional_dependencies: ["Click~=8.0", "types-PyYAML", "pytest>=7.2.0"]
+        additional_dependencies: ["Click~=8.0.4", "types-PyYAML", "pytest>=7.2.0"]
