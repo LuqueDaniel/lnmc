@@ -29,7 +29,7 @@ classifiers = [
 ]
 requires-python = ">=3.7"
 dependencies = [
-    "Click ~= 8.0.4",
+    "Click >= 8.0.4,< 8.2.0",
     "PyYAML ~= 6.0.0"
 ]
 dynamic = ["version"]
