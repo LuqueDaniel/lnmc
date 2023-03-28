@@ -73,3 +73,18 @@ class TestSymlink:
         assert captured.out.startswith(
             f"A broken symbolic link already exists: {create_test_file.dst}"
         )
+
+    def test_symlink_source_not_exists(
+        self,
+        filesystem_actions: FileSystemActions,
+        tmp_path: Path,
+        capsys: pytest.CaptureFixture[str],
+    ) -> None:
+        file_ = "file_does_not_exists.txt"
+        src = tmp_path / file_
+        filesystem_actions._symlink_create(src, Path(f"dst/{file_}"))
+        captured = capsys.readouterr()
+        assert captured.out.startswith(
+            f"The source file or directory {src} does not exist. Check the Yaml "
+            "file and try again.",
+        )
