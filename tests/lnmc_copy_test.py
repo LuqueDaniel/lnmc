@@ -16,7 +16,7 @@ def test_copy_item(
     if rewrite:
         create_test_file.dst.touch()
     filesystem_actions.rewrite = rewrite
-    filesystem_actions._copy_item(*create_test_file)
+    filesystem_actions._copy_item(create_test_file)
 
     captured = capsys.readouterr()
     if captured.out.startswith(f"Copying {create_test_file.dst}"):

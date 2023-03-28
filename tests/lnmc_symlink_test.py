@@ -22,7 +22,7 @@ class TestSymlink:
         if rewrite:
             Path(create_test_file.dst).symlink_to(create_test_file.src.resolve())
         filesystem_actions.rewrite = rewrite
-        filesystem_actions._symlink_create(*create_test_file)
+        filesystem_actions._symlink_create(create_test_file)
 
         captured = capsys.readouterr()
         if captured.out.startswith(f"Creating symbolic link {create_test_file.dst}"):
@@ -47,7 +47,7 @@ class TestSymlink:
         # Create destination file
         create_test_file.dst.touch()
 
-        filesystem_actions._symlink_create(*create_test_file)
+        filesystem_actions._symlink_create(create_test_file)
 
         captured = capsys.readouterr()  # capture std/stderr
         assert captured.out.startswith(
@@ -67,7 +67,7 @@ class TestSymlink:
         create_test_file.dst.resolve().symlink_to(src.resolve())
 
         filesystem_actions.rewrite = True
-        filesystem_actions._symlink_create(*create_test_file)
+        filesystem_actions._symlink_create(create_test_file)
 
         captured = capsys.readouterr()
         assert captured.out.startswith(
@@ -81,10 +81,10 @@ class TestSymlink:
         capsys: pytest.CaptureFixture[str],
     ) -> None:
         file_ = "file_does_not_exists.txt"
-        src = tmp_path / file_
-        filesystem_actions._symlink_create(src, Path(f"dst/{file_}"))
+        path_pair = PathPair(tmp_path / file_, Path(f"dst/{file_}"))
+        filesystem_actions._symlink_create(path_pair)
         captured = capsys.readouterr()
         assert captured.out.startswith(
-            f"The source file or directory {src} does not exist. Check the Yaml "
-            "file and try again.",
+            f"The source file or directory {path_pair.src} does not exist. Check the "
+            "Yaml file and try again.",
         )
