@@ -69,7 +69,19 @@ class FileSystemActions:
             return False
         return True
 
-    def _can_create_item(self, dst: Path) -> bool:
+    def _check_source_exists(self, src: Path) -> bool:
+        if not src.exists():
+            echo(
+                f"The source file or directory {src} does not exist. Check the Yaml "
+                "file and try again.",
+                fg="red",
+            )
+            return False
+        return True
+
+    def _can_create_item(self, dst: Path, src: Path) -> bool:
+        if not self._check_source_exists(src):
+            return False
         if self._check_destination_exists(dst):
             if not self.rewrite:
                 return False
@@ -87,7 +99,7 @@ class FileSystemActions:
             src: symbolic link source path.
             dst: symbolic link destination path.
         """
-        if self._can_create_item(dst):
+        if self._can_create_item(dst, src):
             echo(f"Creating symbolic link {dst} -> {src}", fg="green")
             dst.resolve().symlink_to(src.resolve())
 
@@ -98,7 +110,7 @@ class FileSystemActions:
             src: source path.
             dst: destination path.
         """
-        if self._can_create_item(dst):
+        if self._can_create_item(dst, src):
             echo(f"Copying {dst} from {src}", fg="green")
             if src.is_dir():
                 shutil.copytree(src, dst)
