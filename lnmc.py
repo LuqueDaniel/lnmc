@@ -79,43 +79,39 @@ class FileSystemActions:
             return False
         return True
 
-    def _can_create_item(self, dst: Path, src: Path) -> bool:
-        if not self._check_source_exists(src):
+    def _can_create_item(self, path_pair: PathPair) -> bool:
+        if not self._check_source_exists(path_pair.src):
             return False
-        if self._check_destination_exists(dst):
+        if self._check_destination_exists(path_pair.dst):
             if not self.rewrite:
                 return False
-            self._remove_item(dst)
+            self._remove_item(path_pair.dst)
         return True
 
-    def _symlink_create(self, src: Path, dst: Path) -> None:
+    def _symlink_create(self, path_pair: PathPair) -> None:
         """Create the symbolic link.
 
-        Check that there aren't other files or directories with the same name in
-        the destination directory. If the symbolic link already exists it will be
-        ignored, unless the `rewrite` argument is True.
+        Args:
+            path_pair: src and dst path tuple.
+        """
+        if self._can_create_item(path_pair):
+            echo(
+                f"Creating symbolic link {path_pair.dst} -> {path_pair.src}", fg="green"
+            )
+            path_pair.dst.resolve().symlink_to(path_pair.src.resolve())
+
+    def _copy_item(self, path_pair: PathPair) -> None:
+        """Copy file or directory from a source path to a destination path.
 
         Args:
-            src: symbolic link source path.
-            dst: symbolic link destination path.
+            path_pair: src and dst path tuple.
         """
-        if self._can_create_item(dst, src):
-            echo(f"Creating symbolic link {dst} -> {src}", fg="green")
-            dst.resolve().symlink_to(src.resolve())
-
-    def _copy_item(self, src: Path, dst: Path) -> None:
-        """Copy a file or a directory from a source path to a destination path.
-
-        Args:
-            src: source path.
-            dst: destination path.
-        """
-        if self._can_create_item(dst, src):
-            echo(f"Copying {dst} from {src}", fg="green")
-            if src.is_dir():
-                shutil.copytree(src, dst)
-            elif src.is_file():
-                shutil.copy2(src, dst)
+        if self._can_create_item(path_pair):
+            echo(f"Copying {path_pair.dst} from {path_pair.src}", fg="green")
+            if path_pair.src.is_dir():
+                shutil.copytree(*path_pair)
+            elif path_pair.src.is_file():
+                shutil.copy2(*path_pair)
 
     def _get_paths(
         self, directories: DirectoriesDict
@@ -140,7 +136,7 @@ class FileSystemActions:
             directories: contains directories and subdirectories/files hierarchy.
         """
         for item in self._get_paths(directories):
-            self._symlink_create(item.src, item.dst)
+            self._symlink_create(item)
 
     def copy(self, directories: DirectoriesDict) -> None:
         """Copy files and directories from a dict
@@ -149,7 +145,7 @@ class FileSystemActions:
             directories: contains directories and files to copy.
         """
         for item in self._get_paths(directories):
-            self._copy_item(item.src, item.dst)
+            self._copy_item(item)
 
 
 def echo(message: str, display: bool = True, **styles: Any) -> None:
