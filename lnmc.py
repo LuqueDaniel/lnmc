@@ -60,11 +60,20 @@ class FileSystemActions:
 
     def _check_destination_exists(self, dst: Path) -> bool:
         if self._is_broken_symlink(dst):
-            echo(f"A broken symbolic link already exists: {cli.style(dst, fg='red')}")
+            echo(
+                f"A broken symbolic link already exists: {cli.style(dst, fg='red')}",
+                error=True,
+            )
         elif dst.is_symlink():
-            echo(f"A symbolic link already exists: {cli.style(dst, fg='yellow')}")
+            echo(
+                f"A symbolic link already exists: {cli.style(dst, fg='yellow')}",
+                error=True,
+            )
         elif dst.exists():
-            echo(f"A file or directory already exists: {cli.style(dst, fg='yellow')}")
+            echo(
+                f"A file or directory already exists: {cli.style(dst, fg='yellow')}",
+                error=True,
+            )
         else:
             return False
         return True
@@ -75,6 +84,7 @@ class FileSystemActions:
                 f"The source file or directory {src} does not exist. Check the Yaml "
                 "file and try again.",
                 fg="red",
+                error=True,
             )
             return False
         return True
@@ -148,10 +158,12 @@ class FileSystemActions:
             self._copy_item(item)
 
 
-def echo(message: str, display: bool = True, **styles: Any) -> None:
+def echo(
+    message: str, error: bool = False, display: bool = True, **styles: Any
+) -> None:
     """Wraps click.secho function with a display check."""
     if display:
-        cli.secho(message, **styles)
+        cli.secho(message, err=error, **styles)
 
 
 def yaml_read(yaml_file: Path) -> DirectoriesDict:

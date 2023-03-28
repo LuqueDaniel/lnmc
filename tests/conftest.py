@@ -67,4 +67,5 @@ def create_test_file(
     src.touch()
     DST.mkdir(exist_ok=True)
     yield PathPair(src, DST / src.name)
-    shutil.rmtree(DST)
+    if DST.exists():
+        shutil.rmtree(DST)

@@ -22,7 +22,7 @@ def test_copy_item(
     if captured.out.startswith(f"Copying {create_test_file.dst}"):
         assert True
     elif (
-        captured.out.startswith(
+        captured.err.startswith(
             f"A file or directory already exists: {create_test_file.dst}"
         )
         and rewrite
