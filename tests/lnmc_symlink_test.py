@@ -50,7 +50,7 @@ class TestSymlink:
         filesystem_actions._symlink_create(create_test_file)
 
         captured = capsys.readouterr()  # capture std/stderr
-        assert captured.out.startswith(
+        assert captured.err.startswith(
             f"A file or directory already exists: {create_test_file.dst}"
         )
 
@@ -70,7 +70,7 @@ class TestSymlink:
         filesystem_actions._symlink_create(create_test_file)
 
         captured = capsys.readouterr()
-        assert captured.out.startswith(
+        assert captured.err.startswith(
             f"A broken symbolic link already exists: {create_test_file.dst}"
         )
 
@@ -84,7 +84,7 @@ class TestSymlink:
         path_pair = PathPair(tmp_path / file_, Path(f"dst/{file_}"))
         filesystem_actions._symlink_create(path_pair)
         captured = capsys.readouterr()
-        assert captured.out.startswith(
+        assert captured.err.startswith(
             f"The source file or directory {path_pair.src} does not exist. Check the "
             "Yaml file and try again.",
         )
