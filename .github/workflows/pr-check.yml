@@ -11,23 +11,23 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Setup Python and Tox
-        uses: ./.github/actions/setup_python_tox
+      - name: Setup Python
+        uses: ./.github/actions/setup_python
       - name: 🔍 Lint
         run: |
-          tox -e lint
-
+          ruff --format=github .
+          mypy .
   format:
     name: 🎨 Format
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Setup Python and Tox
-        uses: ./.github/actions/setup_python_tox
+      - name: Setup Python
+        uses: ./.github/actions/setup_python
       - name: 🎨 Format
         run: |
-          tox -e format
-
+          python -m black --check --diff .
+          python -m isort --check --diff .
   test:
     name: 🧪 Tests
     runs-on: ubuntu-latest
@@ -36,16 +36,14 @@ jobs:
         python-version: ["3.7", "3.8", "3.9", "3.10", "3.11"]
     steps:
       - uses: actions/checkout@v3
-      - name: Setup Python and Tox
-        uses: ./.github/actions/setup_python_tox
+      - name: Setup Python
+        uses: ./.github/actions/setup_python
         with:
           python_version: ${{ matrix.python-version }}
           python_packages: "coverage"
       - name: 🧪 Testing with Python ${{ matrix.python-version }}
-        env:
-          PY_VERSION: ${{ matrix.python-version }}
         run: |
-          tox -e py$(echo "${PY_VERSION//./}")
+          pytest
           coverage lcov
       - name: Coveralls
         uses: coverallsapp/github-action@master
