@@ -27,13 +27,6 @@ class TestSymlink:
         captured = capsys.readouterr()
         if captured.out.startswith(f"Creating symbolic link {create_test_file.dst}"):
             assert True
-        elif (
-            captured.out.startswith(
-                f"A symbolic link already exists: {create_test_file.dst}"
-            )
-            and rewrite
-        ):
-            assert True
         else:
             pytest.raises(AssertionError)
 

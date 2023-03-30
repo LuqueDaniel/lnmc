@@ -21,12 +21,5 @@ def test_copy_item(
     captured = capsys.readouterr()
     if captured.out.startswith(f"Copying {create_test_file.dst}"):
         assert True
-    elif (
-        captured.err.startswith(
-            f"A file or directory already exists: {create_test_file.dst}"
-        )
-        and rewrite
-    ):
-        assert True
     else:
         pytest.raises(AssertionError)

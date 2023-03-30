@@ -15,13 +15,6 @@ Install:
 pip install lnmc
 ```
 
-Dev Install:
-```shell
-git clone https://github.com/LuqueDaniel/lnmc.git
-cd lnmc
-pip install -e ".[test,dev]"
-```
-
 Usege:
 
 ```shell
@@ -53,3 +46,13 @@ l10n-spain:
 ```
 
 (Example of a typical Odoo project)
+
+## Development Install
+
+```shell
+git clone https://github.com/LuqueDaniel/lnmc.git
+cd lnmc
+python -m venv --prompt . .venv/
+source .venv/bin/activate
+pip install -e ".[dev]"
+```
