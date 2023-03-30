@@ -8,7 +8,7 @@ description = "Allows to create symbolic link in batches from a YAML file and co
 authors = [{name = "Daniel Luque", email = "danielluque14@gmail.com"}]
 readme = "README.md"
 license = {text = "AGPLv3+"}
-keywords = ["linux", "windows", "devops", "command", "sysadmin", "batches", "symlink", "command-line-tool"]
+keywords = ["linux", "windows", "devops", "sysadmin", "batches", "symlink", "command-line-tool", "cli"]
 classifiers = [
     "Development Status :: 5 - Production/Stable",
     "Intended Audience :: Developers",
@@ -25,7 +25,6 @@ classifiers = [
     "Programming Language :: Python :: 3.11",
     "Topic :: System :: Systems Administration",
     "Topic :: Utilities",
-    "Topic :: System :: Shells"
 ]
 requires-python = ">=3.7"
 dependencies = [
