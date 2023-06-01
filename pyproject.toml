@@ -47,7 +47,7 @@ dev = [
     "mypy >=0.982",
     "pytest >=7.2.0,<8.0.0",
     "pytest-cov >=4.0.0",
-    "types-setuptools ==67.5.0",
+    "types-setuptools ==67.8.0.0",
     "types-PyYAML >=6.0.0",
 ]
 
