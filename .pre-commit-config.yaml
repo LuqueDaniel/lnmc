@@ -15,11 +15,11 @@ repos:
         args:
           - --unsafe
   - repo: https://github.com/charliermarsh/ruff-pre-commit
-    rev: v0.0.259
+    rev: v0.1.9
     hooks:
       - id: ruff
   - repo: https://github.com/psf/black
-    rev: 23.1.0
+    rev: 23.12.1
     hooks:
       - id: black
   - repo: https://github.com/pycqa/isort
@@ -29,7 +29,7 @@ repos:
         name: isort (python)
         args: ["--profile", "black", "--filter-files"]
   - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: "v1.1.1"
+    rev: "v1.8.0"
     hooks:
       - id: mypy
         args: [--strict]

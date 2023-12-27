@@ -15,7 +15,7 @@ jobs:
         uses: ./.github/actions/setup_python
       - name: 🔍 Lint
         run: |
-          ruff --format=github .
+          ruff check --output-format github .
           mypy .
   format:
     name: 🎨 Format
