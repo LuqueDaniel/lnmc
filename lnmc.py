@@ -13,7 +13,7 @@ from typing import Any, Dict, Generator, List, NamedTuple, Union
 import click as cli
 import yaml
 
-__version__ = "1.3.0"
+__version__ = "1.4.0"
 
 DirectoriesDict = Dict[str, List[str]]
 
