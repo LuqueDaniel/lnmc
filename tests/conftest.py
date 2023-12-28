@@ -15,7 +15,7 @@ DST = Path("tests/dst")
 YAML_TEST_FILE = Path("tests/test.yaml")
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture()
 def filesystem_actions(tmp_path: Path) -> FileSystemActions:
     """Instantiate a lnmc.FileSystemActions object and return it.
 
@@ -28,7 +28,7 @@ def filesystem_actions(tmp_path: Path) -> FileSystemActions:
     return FileSystemActions(tmp_path, DST, verbose=True)
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture()
 def create_test_tree(tmp_path: Path) -> Generator[None, None, None]:
     """Create a test directory tree based on the content of YAML_TEST_FILE."""
     directories = yaml_read(YAML_TEST_FILE)
@@ -48,7 +48,7 @@ def create_test_tree(tmp_path: Path) -> Generator[None, None, None]:
     shutil.rmtree(DST)
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture()
 def create_test_file(
     tmp_path: Path, file_path: str = "dir/file.txt"
 ) -> Generator[PathPair, None, None]:

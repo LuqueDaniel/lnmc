@@ -13,10 +13,10 @@ jobs:
       - uses: actions/checkout@v4
       - name: Setup Python
         uses: ./.github/actions/setup_python
-      - name: 🔍 Lint
-        run: |
-          ruff check --output-format github .
-          mypy .
+      - name: Lint (ruff)
+        run: ruff check --output-format github .
+      - name: Lint (mypy)
+        run: mypy .
   format:
     name: 🎨 Format
     runs-on: ubuntu-latest
@@ -24,16 +24,16 @@ jobs:
       - uses: actions/checkout@v4
       - name: Setup Python
         uses: ./.github/actions/setup_python
-      - name: 🎨 Format
-        run: |
-          python -m black --check --diff .
-          python -m isort --check --diff .
+      - name: Format (black)
+        run: python -m black --check --diff .
+      - name: Format (isort)
+        run: python -m isort --check --diff .
   test:
     name: 🧪 Tests
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.7", "3.8", "3.9", "3.10", "3.11"]
+        python-version: ["3.8", "3.9", "3.10", "3.11"]
     steps:
       - uses: actions/checkout@v4
       - name: Setup Python
