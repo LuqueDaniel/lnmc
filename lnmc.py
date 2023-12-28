@@ -168,7 +168,7 @@ def echo(
 
 def yaml_read(yaml_file: Path) -> DirectoriesDict:
     """Read the YAML file and return a dictionary."""
-    with open(yaml_file, "r", encoding="utf-8") as stream:
+    with yaml_file.open(encoding="utf-8") as stream:
         result = yaml.safe_load(stream.read())
         if not isinstance(result, dict):
             raise cli.UsageError(

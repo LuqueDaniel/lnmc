@@ -5,7 +5,7 @@ inputs:
   python_version:
     description: "Version of Python to use"
     required: false
-    default: "3.7"
+    default: "3.8"
   python_packages:
     description: "Python packages to install"
     required: false
